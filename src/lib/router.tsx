@@ -9,7 +9,7 @@ const LoginPage = lazy(() => import('../components/pages/LoginPage'));
 const DashboardPage = lazy(() => import('../components/pages/DashboardPage'));
 const ProductsPage = lazy(() => import('../components/pages/ProductsPage'));
 const OrdersPage = lazy(() => import('../components/pages/OrdersPage'));
-const FinancialPage = lazy(() => import('../components/pages/FinancialPage'));
+
 const SettingsPage = lazy(() => import('../components/pages/SettingsPage'));
 
 /* Layouts */
@@ -65,7 +65,7 @@ export const router = createBrowserRouter([
       { path: '/dashboard', element: <SuspenseWrapper><DashboardPage /></SuspenseWrapper> },
       { path: '/products', element: <SuspenseWrapper><ProductsPage /></SuspenseWrapper> },
       { path: '/orders', element: <SuspenseWrapper><OrdersPage /></SuspenseWrapper> },
-      { path: '/financial', element: <SuspenseWrapper><FinancialPage /></SuspenseWrapper> },
+
       { path: '/settings', element: <SuspenseWrapper><SettingsPage /></SuspenseWrapper> },
     ],
   },

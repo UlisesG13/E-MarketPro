@@ -7,7 +7,6 @@ import {
   LayoutDashboard,
   Package,
   ShoppingCart,
-  BarChart3,
   Settings,
   ChevronLeft,
   Zap,
@@ -17,7 +16,6 @@ const navItems = [
   { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
   { to: '/products', icon: Package, label: 'Productos' },
   { to: '/orders', icon: ShoppingCart, label: 'Órdenes' },
-  { to: '/financial', icon: BarChart3, label: 'Análisis Financiero' },
   { to: '/settings', icon: Settings, label: 'Configuración' },
 ];
 
