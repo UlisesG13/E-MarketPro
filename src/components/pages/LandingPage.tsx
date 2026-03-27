@@ -291,7 +291,7 @@ const LandingPage: React.FC = () => {
                     </li>
                   ))}
                 </ul>
-                <Link to="/login">
+                <Link to={`/plan/${plan.slug}`}>
                   <Button variant={plan.highlighted ? 'primary' : 'outline'} className="w-full">
                     Elegir plan
                   </Button>

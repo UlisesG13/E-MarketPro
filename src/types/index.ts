@@ -64,6 +64,7 @@ export interface WeeklyRevenue {
 
 export interface PricingPlan {
   name: string;
+  slug: string;
   price: number;
   period: string;
   features: string[];
@@ -115,3 +116,84 @@ export interface AuthUser {
   avatar: string;
   role: string;
 }
+
+export interface PlanFeatureGroup {
+  category: string;
+  icon: string;
+  items: { name: string; description: string; included: boolean }[];
+}
+
+export interface PlanLimits {
+  products: number | 'unlimited';
+  users: number | 'unlimited';
+  storageMB: number | 'unlimited';
+  apiCalls: number | 'unlimited';
+}
+
+export interface PlanKPI {
+  label: string;
+  value: number;
+  prefix?: string;
+  suffix?: string;
+  trend: number;
+}
+
+export interface PlanRevenuePoint {
+  month: string;
+  revenue: number;
+  orders: number;
+}
+
+export interface PlanTool {
+  name: string;
+  description: string;
+  icon: string;
+}
+
+export interface PlanDetail {
+  id: string;
+  slug: string;
+  name: string;
+  tagline: string;
+  price: number;
+  period: string;
+  gradient: [string, string];
+  accentColor: string;
+  featureGroups: PlanFeatureGroup[];
+  limits: PlanLimits;
+  tools: PlanTool[];
+  simulatedKPIs: PlanKPI[];
+  simulatedRevenue: PlanRevenuePoint[];
+  badge?: string;
+  highlighted?: boolean;
+}
+
+export interface Testimonial {
+  id: string;
+  name: string;
+  role: string;
+  company: string;
+  avatar: string;
+  quote: string;
+  plan: string;
+  rating: number;
+}
+
+export interface FAQItem {
+  id: string;
+  question: string;
+  answer: string;
+}
+
+export interface ChatMessage {
+  id: string;
+  text: string;
+  sender: 'user' | 'bot';
+  timestamp: string;
+}
+
+export interface ChatQuickAction {
+  label: string;
+  response: string;
+}
+

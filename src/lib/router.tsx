@@ -3,20 +3,21 @@ import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import Spinner from '../components/atoms/Spinner';
 
-/* Lazy-loaded pages */
 const LandingPage = lazy(() => import('../components/pages/LandingPage'));
 const LoginPage = lazy(() => import('../components/pages/LoginPage'));
 const DashboardPage = lazy(() => import('../components/pages/DashboardPage'));
 const ProductsPage = lazy(() => import('../components/pages/ProductsPage'));
 const OrdersPage = lazy(() => import('../components/pages/OrdersPage'));
+const PlanDetailPage = lazy(() => import('../components/pages/PlanDetailPage'));
+const CheckoutPage = lazy(() => import('../components/pages/CheckoutPage'));
+const ComparisonPage = lazy(() => import('../components/pages/ComparisonPage'));
 
 const SettingsPage = lazy(() => import('../components/pages/SettingsPage'));
 
-/* Layouts */
 const DashboardLayout = lazy(() => import('../components/templates/DashboardLayout'));
 const AuthLayout = lazy(() => import('../components/templates/AuthLayout'));
+const ClientLayout = lazy(() => import('../components/templates/ClientLayout'));
 
-/* Suspense wrapper */
 function SuspenseWrapper({ children }: { children: React.ReactNode }) {
   return (
     <Suspense
@@ -34,7 +35,6 @@ function SuspenseWrapper({ children }: { children: React.ReactNode }) {
   );
 }
 
-/* Protected route */
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   if (!isAuthenticated) return <Navigate to="/login" replace />;
@@ -45,6 +45,23 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <SuspenseWrapper><LandingPage /></SuspenseWrapper>,
+  },
+  {
+    element: <SuspenseWrapper><ClientLayout /></SuspenseWrapper>,
+    children: [
+      {
+        path: '/plan/:planId',
+        element: <SuspenseWrapper><PlanDetailPage /></SuspenseWrapper>,
+      },
+      {
+        path: '/checkout/:planId',
+        element: <SuspenseWrapper><CheckoutPage /></SuspenseWrapper>,
+      },
+      {
+        path: '/comparar',
+        element: <SuspenseWrapper><ComparisonPage /></SuspenseWrapper>,
+      },
+    ],
   },
   {
     element: <SuspenseWrapper><AuthLayout /></SuspenseWrapper>,
@@ -74,3 +91,4 @@ export const router = createBrowserRouter([
     element: <Navigate to="/" replace />,
   },
 ]);
+

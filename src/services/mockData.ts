@@ -7,11 +7,12 @@ import type {
   PricingPlan,
   Competitor,
   CostBreakdown,
+  PlanDetail,
+  Testimonial,
+  FAQItem,
+  ChatQuickAction,
 } from '../types';
 
-// ═══════════════════════════════════════════
-// PRODUCTOS (50)
-// ═══════════════════════════════════════════
 
 const productImages = [
   'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400',
@@ -64,9 +65,7 @@ export const products: Product[] = productNames.map((name, i) => ({
   createdAt: new Date(2025, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toISOString(),
 }));
 
-// ═══════════════════════════════════════════
-// ÓRDENES (30)
-// ═══════════════════════════════════════════
+
 
 const customerNames = [
   'María García López', 'Carlos Hernández', 'Ana Martínez Ruiz',
@@ -105,9 +104,6 @@ export const orders: Order[] = Array.from({ length: 30 }, (_, i) => {
   };
 });
 
-// ═══════════════════════════════════════════
-// EQUIPO
-// ═══════════════════════════════════════════
 
 export const teamMembers: TeamMember[] = [
   {
@@ -144,9 +140,6 @@ export const teamMembers: TeamMember[] = [
   },
 ];
 
-// ═══════════════════════════════════════════
-// DATOS DEL PROYECTO — FASES Y COSTOS
-// ═══════════════════════════════════════════
 
 export const projectPhases: ProjectPhase[] = [
   {
@@ -211,9 +204,6 @@ export const budgetSummary = {
   grandTotal: 52522.24,
 };
 
-// ═══════════════════════════════════════════
-// INGRESOS SEMANALES (S1 - S8)
-// ═══════════════════════════════════════════
 
 export const weeklyRevenue: WeeklyRevenue[] = [
   { week: 'S1', revenue: 12500, orders: 18 },
@@ -226,13 +216,11 @@ export const weeklyRevenue: WeeklyRevenue[] = [
   { week: 'S8', revenue: 35800, orders: 48 },
 ];
 
-// ═══════════════════════════════════════════
-// PLANES DE PRECIOS
-// ═══════════════════════════════════════════
 
 export const pricingPlans: PricingPlan[] = [
   {
     name: 'Básico',
+    slug: 'basico',
     price: 299,
     period: '/mes',
     highlighted: false,
@@ -247,6 +235,7 @@ export const pricingPlans: PricingPlan[] = [
   },
   {
     name: 'Pro',
+    slug: 'pro',
     price: 799,
     period: '/mes',
     highlighted: true,
@@ -264,6 +253,7 @@ export const pricingPlans: PricingPlan[] = [
   },
   {
     name: 'Enterprise',
+    slug: 'enterprise',
     price: 1499,
     period: '/mes',
     highlighted: false,
@@ -385,4 +375,396 @@ export const projectTimeline = [
   { week: 'S6', title: 'Pruebas e Integración', description: 'QA, testing unitario e integración frontend-backend', status: 'current' as const },
   { week: 'S7', title: 'Despliegue', description: 'Configuración de servidores, SSL y puesta en producción', status: 'upcoming' as const },
   { week: 'S8', title: 'Cierre y Documentación', description: 'Documentación técnica, entrega final y cierre de proyecto', status: 'upcoming' as const },
+];
+
+// ═══════════════════════════════════════════
+// DETALLES POR PLAN (Cliente)
+// ═══════════════════════════════════════════
+
+export const planDetails: Record<string, PlanDetail> = {
+  basico: {
+    id: 'plan-basico',
+    slug: 'basico',
+    name: 'Básico',
+    tagline: 'Ideal para empezar tu tienda online sin complicaciones',
+    price: 299,
+    period: '/mes',
+    gradient: ['#6366F1', '#8B5CF6'],
+    accentColor: '#6366F1',
+    featureGroups: [
+      {
+        category: 'Analítica',
+        icon: 'BarChart3',
+        items: [
+          { name: 'Panel de métricas', description: 'Visualiza ventas, visitas y clientes en un panel sencillo', included: true },
+          { name: 'Reportes mensuales', description: 'Recibe un resumen mensual automático por correo', included: true },
+          { name: 'Dashboard con IA', description: 'Predicciones y recomendaciones inteligentes', included: false },
+          { name: 'Reportes en tiempo real', description: 'Datos actualizados al instante', included: false },
+        ],
+      },
+      {
+        category: 'Pagos',
+        icon: 'CreditCard',
+        items: [
+          { name: 'Pasarela integrada', description: 'Acepta tarjetas de crédito y débito', included: true },
+          { name: 'PayPal y SPEI', description: 'Métodos de pago adicionales', included: true },
+          { name: 'Multi-moneda', description: 'Vende en diferentes divisas', included: false },
+          { name: 'Comisión reducida', description: 'Tarifa preferencial por transacción', included: false },
+        ],
+      },
+      {
+        category: 'Soporte',
+        icon: 'Headphones',
+        items: [
+          { name: 'Soporte por email', description: 'Respuesta en menos de 24 horas', included: true },
+          { name: 'Base de conocimiento', description: 'Artículos y tutoriales de ayuda', included: true },
+          { name: 'Soporte 24/7', description: 'Atención prioritaria cualquier día, cualquier hora', included: false },
+          { name: 'Account manager', description: 'Un asesor dedicado a tu cuenta', included: false },
+        ],
+      },
+      {
+        category: 'Integraciones',
+        icon: 'Puzzle',
+        items: [
+          { name: 'Webhooks básicos', description: 'Notificaciones automáticas de eventos', included: true },
+          { name: 'API REST', description: 'Integra con tus sistemas existentes', included: false },
+          { name: 'API privada', description: 'Endpoints exclusivos y personalizados', included: false },
+          { name: 'White-label', description: 'Tu marca, tu dominio, sin rastro de E-Market', included: false },
+        ],
+      },
+    ],
+    limits: {
+      products: 100,
+      users: 1,
+      storageMB: 500,
+      apiCalls: 1000,
+    },
+    tools: [
+      { name: 'Editor de productos', description: 'Crea y edita hasta 100 productos con foto y descripciones', icon: 'Package' },
+      { name: 'Gestor de pedidos', description: 'Recibe, procesa y da seguimiento a los pedidos', icon: 'ShoppingCart' },
+      { name: 'Panel de métricas', description: 'Visualiza tus ventas y visitas del mes', icon: 'BarChart3' },
+      { name: 'Notificaciones email', description: 'Alertas de nuevos pedidos y stock bajo', icon: 'Mail' },
+    ],
+    simulatedKPIs: [
+      { label: 'Ingresos del mes', value: 28500, prefix: '$', trend: 5.2 },
+      { label: 'Clientes activos', value: 85, trend: 3.1 },
+      { label: 'Órdenes del mes', value: 42, trend: 7.8 },
+      { label: 'Ticket promedio', value: 678, prefix: '$', trend: 2.4 },
+    ],
+    simulatedRevenue: [
+      { month: 'Ene', revenue: 18200, orders: 28 },
+      { month: 'Feb', revenue: 21500, orders: 32 },
+      { month: 'Mar', revenue: 19800, orders: 30 },
+      { month: 'Abr', revenue: 24100, orders: 36 },
+      { month: 'May', revenue: 26300, orders: 39 },
+      { month: 'Jun', revenue: 28500, orders: 42 },
+    ],
+  },
+
+  pro: {
+    id: 'plan-pro',
+    slug: 'pro',
+    name: 'Pro',
+    tagline: 'Potencia tu negocio con herramientas avanzadas e IA',
+    price: 799,
+    period: '/mes',
+    gradient: ['#8B5CF6', '#06B6D4'],
+    accentColor: '#8B5CF6',
+    badge: 'Más popular',
+    highlighted: true,
+    featureGroups: [
+      {
+        category: 'Analítica',
+        icon: 'BarChart3',
+        items: [
+          { name: 'Panel de métricas', description: 'Visualiza ventas, visitas y clientes en un panel avanzado', included: true },
+          { name: 'Reportes mensuales', description: 'Recibe resúmenes automáticos detallados', included: true },
+          { name: 'Dashboard con IA', description: 'Predicciones de ventas y recomendaciones inteligentes', included: true },
+          { name: 'Reportes en tiempo real', description: 'Datos actualizados al instante con alertas', included: true },
+        ],
+      },
+      {
+        category: 'Pagos',
+        icon: 'CreditCard',
+        items: [
+          { name: 'Pasarela integrada', description: 'Acepta tarjetas de crédito y débito', included: true },
+          { name: 'PayPal y SPEI', description: 'Métodos de pago adicionales', included: true },
+          { name: 'Multi-moneda', description: 'Vende en USD, EUR y más divisas', included: true },
+          { name: 'Comisión reducida', description: '1.9% + $3 por transacción', included: true },
+        ],
+      },
+      {
+        category: 'Soporte',
+        icon: 'Headphones',
+        items: [
+          { name: 'Soporte por email', description: 'Respuesta en menos de 4 horas', included: true },
+          { name: 'Base de conocimiento', description: 'Artículos, tutoriales y videos', included: true },
+          { name: 'Soporte 24/7', description: 'Chat en vivo y teléfono, cualquier día y hora', included: true },
+          { name: 'Account manager', description: 'Un asesor dedicado a tu cuenta', included: false },
+        ],
+      },
+      {
+        category: 'Integraciones',
+        icon: 'Puzzle',
+        items: [
+          { name: 'Webhooks avanzados', description: 'Notificaciones configurables por evento', included: true },
+          { name: 'API REST', description: 'Documentación completa, 10,000 llamadas/mes', included: true },
+          { name: 'API privada', description: 'Endpoints exclusivos y personalizados', included: false },
+          { name: 'White-label', description: 'Tu marca, tu dominio, sin rastro de E-Market', included: false },
+        ],
+      },
+    ],
+    limits: {
+      products: 'unlimited',
+      users: 5,
+      storageMB: 5000,
+      apiCalls: 10000,
+    },
+    tools: [
+      { name: 'Editor de productos', description: 'Productos ilimitados con variantes, SKUs y SEO', icon: 'Package' },
+      { name: 'Gestor de pedidos', description: 'Flujo completo con estados, tracking y devoluciones', icon: 'ShoppingCart' },
+      { name: 'Dashboard con IA', description: 'Predicciones de demanda y sugerencias de precios', icon: 'Brain' },
+      { name: 'Integraciones API', description: 'Conecta con tu ERP, CRM o sistema de envíos', icon: 'Plug' },
+      { name: 'Multi-moneda', description: 'Vende en la moneda que tus clientes prefieran', icon: 'Globe' },
+      { name: 'Reportes en tiempo real', description: 'Métricas actualizadas al segundo con alertas', icon: 'Activity' },
+    ],
+    simulatedKPIs: [
+      { label: 'Ingresos del mes', value: 189600, prefix: '$', trend: 12.5 },
+      { label: 'Clientes activos', value: 1247, trend: 8.3 },
+      { label: 'Órdenes del mes', value: 384, trend: 15.2 },
+      { label: 'Ticket promedio', value: 4726, prefix: '$', trend: 3.1 },
+    ],
+    simulatedRevenue: [
+      { month: 'Ene', revenue: 95200, orders: 128 },
+      { month: 'Feb', revenue: 112500, orders: 156 },
+      { month: 'Mar', revenue: 138700, orders: 198 },
+      { month: 'Abr', revenue: 155400, orders: 245 },
+      { month: 'May', revenue: 172800, orders: 312 },
+      { month: 'Jun', revenue: 189600, orders: 384 },
+    ],
+  },
+
+  enterprise: {
+    id: 'plan-enterprise',
+    slug: 'enterprise',
+    name: 'Enterprise',
+    tagline: 'Infraestructura dedicada y soporte premium para operaciones a gran escala',
+    price: 1499,
+    period: '/mes',
+    gradient: ['#06B6D4', '#10B981'],
+    accentColor: '#06B6D4',
+    featureGroups: [
+      {
+        category: 'Analítica',
+        icon: 'BarChart3',
+        items: [
+          { name: 'Panel de métricas', description: 'Dashboard empresarial con vistas personalizables', included: true },
+          { name: 'Reportes mensuales', description: 'Reportes ejecutivos detallados y automáticos', included: true },
+          { name: 'Dashboard con IA', description: 'Modelos predictivos avanzados y machine learning', included: true },
+          { name: 'Reportes en tiempo real', description: 'Streaming de datos con dashboards en vivo', included: true },
+        ],
+      },
+      {
+        category: 'Pagos',
+        icon: 'CreditCard',
+        items: [
+          { name: 'Pasarela integrada', description: 'Todas las tarjetas y métodos locales', included: true },
+          { name: 'PayPal y SPEI', description: 'Todos los métodos de pago disponibles', included: true },
+          { name: 'Multi-moneda', description: 'Soporte completo para comercio internacional', included: true },
+          { name: 'Comisión mínima', description: '0.9% + $2 — la tarifa más baja del mercado', included: true },
+        ],
+      },
+      {
+        category: 'Soporte',
+        icon: 'Headphones',
+        items: [
+          { name: 'Soporte por email', description: 'Respuesta garantizada en 1 hora', included: true },
+          { name: 'Base de conocimiento', description: 'Documentación, videos y workshops privados', included: true },
+          { name: 'Soporte 24/7', description: 'Línea directa con ingenieros senior', included: true },
+          { name: 'Account manager', description: 'Ejecutivo de cuenta dedicado y reuniones semanales', included: true },
+        ],
+      },
+      {
+        category: 'Integraciones',
+        icon: 'Puzzle',
+        items: [
+          { name: 'Webhooks enterprise', description: 'Cola de mensajes garantizada y reintentos', included: true },
+          { name: 'API REST', description: 'Sin límite de llamadas, SLA 99.9%', included: true },
+          { name: 'API privada', description: 'Endpoints personalizados para tu operación', included: true },
+          { name: 'White-label', description: 'Marca completamente personalizada en toda la plataforma', included: true },
+        ],
+      },
+    ],
+    limits: {
+      products: 'unlimited',
+      users: 'unlimited',
+      storageMB: 'unlimited',
+      apiCalls: 'unlimited',
+    },
+    tools: [
+      { name: 'Editor de productos', description: 'Sin límites: variantes, bulk import, SEO avanzado', icon: 'Package' },
+      { name: 'Gestor de pedidos', description: 'Multi-almacén, automatización de fulfillment', icon: 'ShoppingCart' },
+      { name: 'IA Empresarial', description: 'Modelos predictivos, segmentación y optimización', icon: 'Brain' },
+      { name: 'API privada', description: 'Endpoints personalizados y documentación dedicada', icon: 'Code' },
+      { name: 'White-label', description: 'Tu marca en toda la experiencia, sin rastro de E-Market', icon: 'Palette' },
+      { name: 'Infraestructura dedicada', description: 'Servidores aislados con SLA 99.9% uptime', icon: 'Server' },
+      { name: 'Onboarding personalizado', description: 'Migración guiada y configuración a la medida', icon: 'UserCheck' },
+      { name: 'Multi-moneda global', description: 'Comercio internacional con conversión automática', icon: 'Globe' },
+    ],
+    simulatedKPIs: [
+      { label: 'Ingresos del mes', value: 1250000, prefix: '$', trend: 18.7 },
+      { label: 'Clientes activos', value: 12480, trend: 14.2 },
+      { label: 'Órdenes del mes', value: 4850, trend: 22.1 },
+      { label: 'Ticket promedio', value: 8240, prefix: '$', trend: 6.5 },
+    ],
+    simulatedRevenue: [
+      { month: 'Ene', revenue: 620000, orders: 2100 },
+      { month: 'Feb', revenue: 745000, orders: 2650 },
+      { month: 'Mar', revenue: 890000, orders: 3200 },
+      { month: 'Abr', revenue: 985000, orders: 3800 },
+      { month: 'May', revenue: 1120000, orders: 4350 },
+      { month: 'Jun', revenue: 1250000, orders: 4850 },
+    ],
+  },
+};
+
+// ═══════════════════════════════════════════
+// TESTIMONIOS
+// ═══════════════════════════════════════════
+
+export const testimonials: Testimonial[] = [
+  {
+    id: 'test-1',
+    name: 'Laura Méndez',
+    role: 'Fundadora',
+    company: 'Artesanías Chiapas',
+    avatar: '',
+    quote: 'Con el plan Básico pude digitalizar mi tienda de artesanías en menos de una semana. Los reportes mensuales me ayudan a entender qué productos se venden más.',
+    plan: 'basico',
+    rating: 5,
+  },
+  {
+    id: 'test-2',
+    name: 'Roberto Jiménez',
+    role: 'Gerente General',
+    company: 'TechShop MX',
+    avatar: '',
+    quote: 'Empezamos con el Básico y en 3 meses migramos al Pro. La diferencia en analítica es impresionante, las predicciones de IA nos ayudaron a reducir stock muerto un 40%.',
+    plan: 'basico',
+    rating: 4,
+  },
+  {
+    id: 'test-3',
+    name: 'Patricia Rodríguez',
+    role: 'Directora de E-commerce',
+    company: 'ModaFit Studio',
+    avatar: '',
+    quote: 'El dashboard con IA del plan Pro es un game changer. Predijo la demanda de temporada y pudimos prepararnos. Nuestras ventas subieron 65% en Black Friday.',
+    plan: 'pro',
+    rating: 5,
+  },
+  {
+    id: 'test-4',
+    name: 'Alejandro Torres',
+    role: 'CTO',
+    company: 'ElectroMart',
+    avatar: '',
+    quote: 'Las integraciones API del plan Pro nos permitieron conectar nuestro ERP y sistema de envíos. Ahora todo está automatizado y ahorramos 20 horas semanales.',
+    plan: 'pro',
+    rating: 5,
+  },
+  {
+    id: 'test-5',
+    name: 'Carmen Vázquez',
+    role: 'VP de Operaciones',
+    company: 'GrupoRetail Nacional',
+    avatar: '',
+    quote: 'Con Enterprise manejamos 15,000 SKUs en 3 almacenes. El SLA 99.9% y el account manager dedicado nos dan la tranquilidad que necesitamos a esta escala.',
+    plan: 'enterprise',
+    rating: 5,
+  },
+  {
+    id: 'test-6',
+    name: 'Fernando Castañeda',
+    role: 'CEO',
+    company: 'MegaStore Online',
+    avatar: '',
+    quote: 'El white-label del Enterprise nos permite ofrecer la plataforma como propia a nuestros clientes B2B. La API privada y el onboarding personalizado fueron clave.',
+    plan: 'enterprise',
+    rating: 5,
+  },
+];
+
+// ═══════════════════════════════════════════
+// PREGUNTAS FRECUENTES
+// ═══════════════════════════════════════════
+
+export const faqItems: FAQItem[] = [
+  {
+    id: 'faq-1',
+    question: '¿Puedo cambiar de plan en cualquier momento?',
+    answer: 'Sí, puedes subir o bajar de plan cuando quieras. Si subes de plan, solo pagarás la diferencia proporcional. Si bajas, el cambio se aplica en tu próximo ciclo de facturación.',
+  },
+  {
+    id: 'faq-2',
+    question: '¿Hay un periodo de prueba gratuito?',
+    answer: 'Todos los planes incluyen 14 días de prueba gratuita sin necesidad de tarjeta de crédito. Al finalizar, puedes elegir el plan que mejor se adapte a tu negocio.',
+  },
+  {
+    id: 'faq-3',
+    question: '¿Cómo funciona la pasarela de pagos?',
+    answer: 'E-MARKET PRO integra Stripe, PayPal y SPEI. Tus clientes pueden pagar con tarjeta de crédito/débito, transferencia bancaria o PayPal. Los fondos se depositan en tu cuenta en 2-3 días hábiles.',
+  },
+  {
+    id: 'faq-4',
+    question: '¿Mis datos están seguros?',
+    answer: 'Utilizamos encriptación AES-256, certificados SSL/TLS, y cumplimos con PCI DSS nivel 1. Tus datos y los de tus clientes están protegidos con los más altos estándares de seguridad.',
+  },
+  {
+    id: 'faq-5',
+    question: '¿Puedo migrar mis datos desde otra plataforma?',
+    answer: 'Sí, ofrecemos herramientas de importación para CSV/Excel y migraciones guiadas desde Shopify, WooCommerce y Tiendanube. En el plan Enterprise, un equipo dedicado se encarga de la migración completa.',
+  },
+  {
+    id: 'faq-6',
+    question: '¿Hay permanencia mínima o penalización por cancelar?',
+    answer: 'No hay permanencia mínima ni penalizaciones. Puedes cancelar en cualquier momento y seguirás teniendo acceso hasta el final de tu periodo de facturación actual.',
+  },
+  {
+    id: 'faq-7',
+    question: '¿Qué métodos de pago aceptan para la suscripción?',
+    answer: 'Aceptamos tarjetas de crédito/débito (Visa, Mastercard, AMEX), PayPal y transferencia bancaria (SPEI). La facturación es mensual o anual con 20% de descuento.',
+  },
+  {
+    id: 'faq-8',
+    question: '¿Incluyen dominio personalizado?',
+    answer: 'Sí, todos los planes incluyen la posibilidad de conectar tu propio dominio. Nosotros nos encargamos de la configuración del certificado SSL gratuito.',
+  },
+];
+
+// ═══════════════════════════════════════════
+// CHAT SOPORTE (respuestas predefinidas)
+// ═══════════════════════════════════════════
+
+export const chatQuickActions: ChatQuickAction[] = [
+  {
+    label: '¿Qué plan me conviene?',
+    response: '¡Excelente pregunta! Depende del tamaño de tu negocio:\n\n• **Básico** ($299/mes): Ideal si tienes menos de 100 productos y estás empezando.\n• **Pro** ($799/mes): Perfecto si necesitas analítica avanzada, IA y API.\n• **Enterprise** ($1,499/mes): Para operaciones a gran escala con infraestructura dedicada.\n\n¿Te gustaría más detalles de algún plan?',
+  },
+  {
+    label: '¿Tienen prueba gratis?',
+    response: '¡Sí! Todos los planes incluyen **14 días de prueba gratuita** sin necesidad de tarjeta de crédito. Puedes explorar todas las funciones y decidir después. 🎉',
+  },
+  {
+    label: '¿Cómo migro mis datos?',
+    response: 'Tenemos herramientas de importación para **CSV/Excel** y migraciones guiadas desde Shopify, WooCommerce y Tiendanube.\n\nEn el plan Enterprise, un equipo dedicado se encarga de todo el proceso de migración. 📦',
+  },
+  {
+    label: '¿Puedo cancelar cuando quiera?',
+    response: '¡Por supuesto! No hay permanencia mínima ni penalizaciones. Puedes cancelar en cualquier momento y seguirás teniendo acceso hasta el final de tu periodo de facturación. ✅',
+  },
+  {
+    label: 'Necesito hablar con ventas',
+    response: 'Con gusto te conecto con nuestro equipo de ventas. Puedes escribirnos a **ventas@emarketpro.mx** o llamar al **800-123-4567** de lunes a viernes de 9am a 6pm. También puedes agendar una demo personalizada. 📞',
+  },
 ];
