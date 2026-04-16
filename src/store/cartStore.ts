@@ -1,46 +1,62 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import type { CartItem, Product } from '../types';
 
 interface CartState {
   items: CartItem[];
-  addItem: (product: Product) => void;
+  addItem: (product: Product, quantity?: number) => void;
   removeItem: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
   total: () => number;
   itemCount: () => number;
+  hasItem: (productId: string) => boolean;
 }
 
-export const useCartStore = create<CartState>((set, get) => ({
-  items: [],
-  addItem: (product: Product) => {
-    const items = get().items;
-    const existing = items.find((i) => i.product.id === product.id);
-    if (existing) {
-      set({
-        items: items.map((i) =>
-          i.product.id === product.id ? { ...i, quantity: i.quantity + 1 } : i
-        ),
-      });
-    } else {
-      set({ items: [...items, { product, quantity: 1 }] });
-    }
-  },
-  removeItem: (productId: string) => {
-    set({ items: get().items.filter((i) => i.product.id !== productId) });
-  },
-  updateQuantity: (productId: string, quantity: number) => {
-    if (quantity <= 0) {
-      set({ items: get().items.filter((i) => i.product.id !== productId) });
-    } else {
-      set({
-        items: get().items.map((i) =>
-          i.product.id === productId ? { ...i, quantity } : i
-        ),
-      });
-    }
-  },
-  clearCart: () => set({ items: [] }),
-  total: () => get().items.reduce((sum, i) => sum + i.product.price * i.quantity, 0),
-  itemCount: () => get().items.reduce((sum, i) => sum + i.quantity, 0),
-}));
+export const useCartStore = create<CartState>()(
+  persist(
+    (set, get) => ({
+      items: [],
+      addItem: (product: Product, quantity = 1) => {
+        const safeQuantity = Math.max(1, quantity);
+        const items = get().items;
+        const existing = items.find((item) => item.product.id === product.id);
+
+        if (existing) {
+          set({
+            items: items.map((item) =>
+              item.product.id === product.id
+                ? { ...item, quantity: item.quantity + safeQuantity }
+                : item
+            ),
+          });
+          return;
+        }
+
+        set({ items: [...items, { product, quantity: safeQuantity }] });
+      },
+      removeItem: (productId: string) => {
+        set({ items: get().items.filter((item) => item.product.id !== productId) });
+      },
+      updateQuantity: (productId: string, quantity: number) => {
+        if (quantity <= 0) {
+          set({ items: get().items.filter((item) => item.product.id !== productId) });
+          return;
+        }
+
+        set({
+          items: get().items.map((item) =>
+            item.product.id === productId ? { ...item, quantity } : item
+          ),
+        });
+      },
+      clearCart: () => set({ items: [] }),
+      total: () =>
+        get().items.reduce((sum, item) => sum + item.product.price * item.quantity, 0),
+      itemCount: () => get().items.reduce((sum, item) => sum + item.quantity, 0),
+      hasItem: (productId: string) =>
+        get().items.some((item) => item.product.id === productId),
+    }),
+    { name: 'emarketpro-cart' }
+  )
+);

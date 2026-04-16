@@ -53,6 +53,7 @@ const ProductCard = React.memo<ProductCardProps>(function ProductCard({
         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3">
           {onEdit && (
             <button
+              type="button"
               onClick={() => onEdit(product)}
               className="p-2.5 rounded-xl bg-white/10 hover:bg-indigo-500 text-white transition-colors"
               aria-label="Editar producto"
@@ -62,6 +63,7 @@ const ProductCard = React.memo<ProductCardProps>(function ProductCard({
           )}
           {onDelete && (
             <button
+              type="button"
               onClick={() => onDelete(product.id)}
               className="p-2.5 rounded-xl bg-white/10 hover:bg-red-500 text-white transition-colors"
               aria-label="Eliminar producto"

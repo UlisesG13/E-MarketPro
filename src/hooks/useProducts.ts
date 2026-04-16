@@ -1,11 +1,25 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { fetchProducts, createProduct, updateProduct, deleteProduct } from '../services/api';
+import {
+  fetchProducts,
+  fetchProductById,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+} from '../services/api';
 import type { Product } from '../types';
 
 export function useProducts() {
   return useQuery({
     queryKey: ['products'],
     queryFn: fetchProducts,
+  });
+}
+
+export function useProduct(productId: string) {
+  return useQuery({
+    queryKey: ['products', productId],
+    queryFn: () => fetchProductById(productId),
+    enabled: Boolean(productId),
   });
 }
 

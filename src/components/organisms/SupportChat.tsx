@@ -36,7 +36,7 @@ const SupportChat: React.FC = () => {
     setTimeout(() => {
       setMessages((prev) => [...prev, { id: Date.now(), text, sender: 'bot' }]);
       setIsTyping(false);
-    }, 800 + Math.random() * 600);
+    }, 1100);
   };
 
   const handleQuickAction = (label: string, response: string) => {
@@ -52,9 +52,13 @@ const SupportChat: React.FC = () => {
     setInput('');
 
     const lower = trimmed.toLowerCase();
-    const matched = chatQuickActions.find((a) =>
-      lower.includes('plan') || lower.includes('precio') || lower.includes('prueba') ||
-      lower.includes('migrar') || lower.includes('cancelar') || lower.includes('ventas')
+    const matched = chatQuickActions.find(() =>
+      lower.includes('plan') ||
+      lower.includes('precio') ||
+      lower.includes('prueba') ||
+      lower.includes('migrar') ||
+      lower.includes('cancelar') ||
+      lower.includes('ventas')
     );
 
     if (matched) {
@@ -178,6 +182,7 @@ const SupportChat: React.FC = () => {
                   {chatQuickActions.map((action) => (
                     <button
                       key={action.label}
+                      type="button"
                       onClick={() => handleQuickAction(action.label, action.response)}
                       className="px-3 py-1.5 rounded-full text-xs bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 hover:bg-indigo-500/20 transition-colors"
                     >
@@ -201,6 +206,7 @@ const SupportChat: React.FC = () => {
                   className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 outline-none focus:border-indigo-500/50 transition-colors"
                 />
                 <button
+                  type="button"
                   onClick={handleSend}
                   disabled={!input.trim()}
                   className="p-2.5 rounded-xl bg-indigo-500 text-white hover:bg-indigo-600 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"

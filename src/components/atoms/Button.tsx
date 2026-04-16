@@ -35,10 +35,12 @@ const Button = React.memo<ButtonProps>(function Button({
   loading,
   className,
   disabled,
+  type = 'button',
   ...props
 }) {
   return (
     <motion.button
+      type={type}
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       className={cn(
