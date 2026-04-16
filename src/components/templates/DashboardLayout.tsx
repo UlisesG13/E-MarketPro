@@ -9,7 +9,7 @@ const DashboardLayout: React.FC = () => {
   const sidebarOpen = useUIStore((s) => s.sidebarOpen);
 
   return (
-    <div className="min-h-screen bg-[#0a0a14] text-white">
+    <div className="app-shell min-h-screen">
       <Sidebar />
       <div
         className={cn(

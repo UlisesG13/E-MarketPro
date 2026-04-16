@@ -227,3 +227,13 @@ export interface StoreOrder extends Order {
   shippingCost: number;
   trackingCode?: string;
 }
+
+export interface AppNotification {
+  id: string;
+  title: string;
+  description: string;
+  time: string;
+  href?: string;
+  read: boolean;
+  kind: 'order' | 'system' | 'insight' | 'customer';
+}

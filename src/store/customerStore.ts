@@ -7,6 +7,7 @@ import type {
   CustomerProfile,
   StoreOrder,
 } from '../types';
+import { useNotificationsStore } from './notificationsStore';
 
 interface PlaceOrderInput {
   items: CartItem[];
@@ -158,6 +159,15 @@ export const useCustomerStore = create<CustomerState>()(
         set({
           storeOrders: [order, ...get().storeOrders],
           lastOrderId: order.id,
+        });
+
+        useNotificationsStore.getState().pushNotification({
+          id: `notif-order-${order.id}`,
+          title: 'Pedido confirmado',
+          description: `${order.id} fue registrado correctamente por ${order.customerName}.`,
+          time: 'Ahora',
+          href: '/account/orders',
+          kind: 'order',
         });
 
         return order;

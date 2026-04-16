@@ -1,17 +1,65 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #6366F1;
-  --color-secondary: #8B5CF6;
-  --color-accent: #06B6D4;
-  --color-surface: #1A1A2E;
-  --color-surface-dark: #16213E;
-  --color-bg-dark: #0F0F1A;
-  --color-bg-darker: #0A0A14;
+  --color-primary: #2563eb;
+  --color-secondary: #0f766e;
+  --color-accent: #38bdf8;
+  --color-surface: #ffffff;
+  --color-surface-dark: #0f172a;
+  --color-bg-dark: #0b1220;
+  --color-bg-darker: #f6f8fb;
 }
 
 
 @layer base {
+  :root {
+    --app-bg: #eef6ff;
+    --app-bg-muted: #eef5ff;
+    --app-surface: rgba(255, 255, 255, 0.92);
+    --app-surface-strong: #ffffff;
+    --app-surface-soft: rgba(15, 23, 42, 0.04);
+    --app-text: #0f172a;
+    --app-text-muted: #546e7a;
+    --app-text-soft: #7b8a9d;
+    --app-border: rgba(15, 23, 42, 0.08);
+    --app-border-strong: rgba(15, 23, 42, 0.14);
+    --app-primary: #2563eb;
+    --app-primary-600: #1d4ed8;
+    --app-primary-soft: rgba(37, 99, 235, 0.12);
+    --app-secondary: #6366f1;
+    --app-secondary-soft: rgba(99, 102, 241, 0.14);
+    --app-accent: #38bdf8;
+    --app-accent-soft: rgba(56, 189, 248, 0.16);
+    --app-success: #10b981;
+    --app-warning: #f59e0b;
+    --app-danger: #ef4444;
+    --app-shadow: 0 16px 45px rgba(15, 23, 42, 0.08);
+  }
+
+  html.dark {
+    --app-bg: #070b1a;
+    --app-bg-muted: #0e1730;
+    --app-surface: rgba(15, 23, 42, 0.88);
+    --app-surface-strong: #111a2a;
+    --app-surface-soft: rgba(99, 102, 241, 0.08);
+    --app-text: #e8eef7;
+    --app-text-muted: #94a3b8;
+    --app-text-soft: #a5b0cc;
+    --app-border: rgba(148, 163, 184, 0.16);
+    --app-border-strong: rgba(148, 163, 184, 0.24);
+    --app-primary: #7c3aed;
+    --app-primary-600: #5b21b6;
+    --app-primary-soft: rgba(124, 58, 237, 0.18);
+    --app-secondary: #38bdf8;
+    --app-secondary-soft: rgba(56, 189, 248, 0.18);
+    --app-accent: #60a5fa;
+    --app-accent-soft: rgba(96, 165, 250, 0.16);
+    --app-success: #34d399;
+    --app-warning: #fbbf24;
+    --app-danger: #f87171;
+    --app-shadow: 0 20px 55px rgba(2, 6, 23, 0.42);
+  }
+
   * {
     margin: 0;
     padding: 0;
@@ -26,8 +74,22 @@
 
   body {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    background-color: #0a0a14;
-    color: #ffffff;
+    background:
+      radial-gradient(circle at top 15% left 10%, rgba(56, 189, 248, 0.18), transparent 24%),
+      radial-gradient(circle at 90% 15%, rgba(99, 102, 241, 0.14), transparent 22%),
+      radial-gradient(circle at 70% 85%, rgba(165, 180, 252, 0.16), transparent 18%),
+      linear-gradient(135deg, #eef6ff 0%, #f7f3ff 48%, #f4f8ff 100%);
+    color: var(--app-text);
+    min-height: 100vh;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  html.dark body {
+    background:
+      radial-gradient(circle at 15% 15%, rgba(124, 58, 237, 0.16), transparent 22%),
+      radial-gradient(circle at 85% 18%, rgba(56, 189, 248, 0.14), transparent 20%),
+      radial-gradient(circle at 80% 82%, rgba(96, 165, 250, 0.12), transparent 18%),
+      linear-gradient(180deg, #070b1a 0%, #0d1130 48%, #121b3e 100%);
   }
 
   ::-webkit-scrollbar {
@@ -40,29 +102,93 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--app-border-strong);
     border-radius: 3px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: color-mix(in srgb, var(--app-primary) 35%, var(--app-border-strong));
   }
 
   ::selection {
-    background: rgba(99, 102, 241, 0.3);
-    color: #ffffff;
+    background: color-mix(in srgb, var(--app-primary) 26%, transparent);
+    color: var(--app-text);
   }
 
   select option {
-    background: #1a1a2e;
-    color: #ffffff;
+    background: var(--app-surface-strong);
+    color: var(--app-text);
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
   }
 }
 
 
 @layer utilities {
+  .app-shell {
+    background: var(--app-bg);
+    color: var(--app-text);
+  }
+
+  .app-surface {
+    background: var(--app-surface);
+    border-color: var(--app-border);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+
+  .app-surface-strong {
+    background: var(--app-surface-strong);
+    border-color: var(--app-border-strong);
+  }
+
+  .app-card {
+    background: var(--app-surface);
+    border: 1px solid var(--app-border);
+    box-shadow: var(--app-shadow);
+  }
+
+  .app-card-subtle {
+    background: var(--app-surface-soft);
+    border: 1px solid var(--app-border);
+  }
+
+  .app-text-muted {
+    color: var(--app-text-muted);
+  }
+
+  .app-text-soft {
+    color: var(--app-text-soft);
+  }
+
+  .app-divider {
+    border-color: var(--app-border);
+  }
+
+  .app-icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.95rem;
+    border: 1px solid var(--app-border);
+    background: var(--app-surface-soft);
+    color: var(--app-text-muted);
+    transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .app-icon-button:hover {
+    color: var(--app-text);
+    border-color: var(--app-border-strong);
+    background: color-mix(in srgb, var(--app-surface-soft) 70%, var(--app-primary-soft));
+  }
+
   .text-gradient {
-    background: linear-gradient(135deg, #6366f1, #8b5cf6, #06b6d4);
+    background: linear-gradient(135deg, var(--app-primary), var(--app-secondary), var(--app-accent));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -94,5 +220,110 @@
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
+  }
+
+  [class~="bg-indigo-500"] {
+    background-color: var(--app-primary) !important;
+  }
+
+  [class~="hover:bg-indigo-600"]:hover {
+    background-color: var(--app-primary-600) !important;
+  }
+
+  [class~="text-indigo-400"] {
+    color: var(--app-primary) !important;
+  }
+
+  [class~="border-indigo-500/20"] {
+    border-color: color-mix(in srgb, var(--app-primary) 24%, transparent) !important;
+  }
+
+  [class~="border-indigo-500/30"] {
+    border-color: color-mix(in srgb, var(--app-primary) 34%, transparent) !important;
+  }
+
+  [class~="bg-indigo-500/5"] {
+    background-color: color-mix(in srgb, var(--app-primary) 8%, transparent) !important;
+  }
+
+  [class~="bg-indigo-500/10"] {
+    background-color: var(--app-primary-soft) !important;
+  }
+
+  [class~="bg-indigo-500/15"] {
+    background-color: color-mix(in srgb, var(--app-primary) 15%, transparent) !important;
+  }
+
+  [class~="bg-indigo-500/20"] {
+    background-color: color-mix(in srgb, var(--app-primary) 20%, transparent) !important;
+  }
+
+  [class~="text-violet-400"] {
+    color: var(--app-secondary) !important;
+  }
+
+  [class~="bg-violet-500/10"] {
+    background-color: var(--app-secondary-soft) !important;
+  }
+
+  [class~="border-violet-500/20"] {
+    border-color: color-mix(in srgb, var(--app-secondary) 24%, transparent) !important;
+  }
+
+  [class~="text-cyan-400"] {
+    color: var(--app-accent) !important;
+  }
+
+  [class~="bg-cyan-500/10"] {
+    background-color: var(--app-accent-soft) !important;
+  }
+
+  [class~="border-cyan-500/20"] {
+    border-color: color-mix(in srgb, var(--app-accent) 26%, transparent) !important;
+  }
+
+  html:not(.dark) [class~="bg-[#0a0a14]"],
+  html:not(.dark) [class~="bg-[#0f0f1a]"],
+  html:not(.dark) [class~="bg-[#1a1a2e]"] {
+    background-color: var(--app-bg) !important;
+  }
+
+  html:not(.dark) [class~="bg-[#0d0d1a]/80"],
+  html:not(.dark) [class~="bg-[#0d0d1a]/60"],
+  html:not(.dark) [class~="bg-[#0a0a14]/80"] {
+    background-color: color-mix(in srgb, var(--app-bg) 84%, white) !important;
+  }
+
+  html:not(.dark) [class~="bg-white/5"] {
+    background-color: var(--app-surface-soft) !important;
+  }
+
+  html:not(.dark) [class~="bg-white/10"] {
+    background-color: color-mix(in srgb, var(--app-text) 6%, transparent) !important;
+  }
+
+  html:not(.dark) [class~="text-white"] {
+    color: var(--app-text) !important;
+  }
+
+  html:not(.dark) [class~="text-gray-300"] {
+    color: color-mix(in srgb, var(--app-text) 78%, white) !important;
+  }
+
+  html:not(.dark) [class~="text-gray-400"] {
+    color: var(--app-text-muted) !important;
+  }
+
+  html:not(.dark) [class~="text-gray-500"],
+  html:not(.dark) [class~="text-gray-600"] {
+    color: var(--app-text-soft) !important;
+  }
+
+  html:not(.dark) [class~="border-white/10"] {
+    border-color: var(--app-border) !important;
+  }
+
+  html:not(.dark) [class~="border-white/5"] {
+    border-color: color-mix(in srgb, var(--app-text) 6%, transparent) !important;
   }
 }

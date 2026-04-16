@@ -193,15 +193,15 @@ export const projectPhases: ProjectPhase[] = [
 ];
 
 export const budgetSummary = {
-  baseCost: 36872,
+  baseCost: 42450,
   infrastructure: 2500,
-  subtotal: 39372,
+  subtotal: 44950,
   profitMargin: 0.15,
-  profitAmount: 5905.80,
-  subtotalWithProfit: 45277.80,
+  profitAmount: 6742.50,
+  subtotalWithProfit: 51692.50,
   taxRate: 0.16,
-  taxAmount: 7244.44,
-  grandTotal: 52522.24,
+  taxAmount: 8270.80,
+  grandTotal: 59963.30,
 };
 
 

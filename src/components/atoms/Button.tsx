@@ -14,11 +14,16 @@ interface ButtonProps extends Omit<HTMLMotionProps<'button'>, 'children'> {
 }
 
 const variantStyles: Record<ButtonVariant, string> = {
-  primary: 'bg-indigo-500 hover:bg-indigo-600 text-white shadow-lg shadow-indigo-500/25',
-  secondary: 'bg-violet-500/10 hover:bg-violet-500/20 text-violet-400 border border-violet-500/20',
-  ghost: 'hover:bg-white/5 text-gray-400 hover:text-white',
-  danger: 'bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20',
-  outline: 'border border-white/10 hover:border-white/20 text-gray-300 hover:text-white hover:bg-white/5',
+  primary:
+    'bg-[var(--app-primary)] hover:bg-[var(--app-primary-600)] text-white shadow-[var(--app-shadow)]',
+  secondary:
+    'border border-[var(--app-border)] bg-[var(--app-secondary-soft)] text-[var(--app-secondary)] hover:opacity-90',
+  ghost:
+    'bg-transparent text-[var(--app-text-muted)] hover:bg-[var(--app-surface-soft)] hover:text-[var(--app-text)]',
+  danger:
+    'border border-[rgba(239,68,68,0.22)] bg-[rgba(239,68,68,0.12)] text-[var(--app-danger)] hover:bg-[rgba(239,68,68,0.18)]',
+  outline:
+    'border border-[var(--app-border)] bg-transparent text-[var(--app-text-muted)] hover:border-[var(--app-border-strong)] hover:bg-[var(--app-surface-soft)] hover:text-[var(--app-text)]',
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
@@ -44,7 +49,7 @@ const Button = React.memo<ButtonProps>(function Button({
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       className={cn(
-        'inline-flex items-center justify-center font-medium rounded-xl transition-colors duration-200 cursor-pointer',
+        'inline-flex items-center justify-center font-medium rounded-xl transition-all duration-200 cursor-pointer',
         'disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none',
         variantStyles[variant],
         sizeStyles[size],

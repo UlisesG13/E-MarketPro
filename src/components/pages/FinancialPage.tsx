@@ -59,7 +59,7 @@ function BreakevenProgress() {
         />
       </div>
       <div className="flex justify-between text-xs mt-2">
-        <span className="text-gray-500">Inversión: {formatCurrency(52522.24)}</span>
+        <span className="text-gray-500">Inversión: {formatCurrency(budgetSummary.grandTotal)}</span>
         <span className="text-emerald-400">ROI positivo ✓</span>
       </div>
     </div>

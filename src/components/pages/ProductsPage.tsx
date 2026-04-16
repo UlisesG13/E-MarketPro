@@ -80,6 +80,16 @@ const ProductsPage: React.FC = () => {
   };
 
   const handleSave = () => {
+    if (!form.name.trim() || !form.description.trim() || !form.sku.trim()) {
+      toast.error('Completa nombre, descripción y SKU');
+      return;
+    }
+
+    if (form.price <= 0 || form.stock < 0) {
+      toast.error('Revisa precio y stock antes de guardar');
+      return;
+    }
+
     if (editProduct) {
       updateMutation.mutate({ id: editProduct.id, data: form }, {
         onSuccess: () => { toast.success('Producto actualizado'); setModalOpen(false); },
@@ -110,8 +120,8 @@ const ProductsPage: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white">Productos</h1>
-          <p className="text-gray-400 text-sm mt-1">{filtered.length} productos encontrados</p>
+          <h1 className="text-2xl font-bold text-[var(--app-text)]">Productos</h1>
+          <p className="mt-1 text-sm text-[var(--app-text-muted)]">{filtered.length} productos encontrados</p>
         </div>
         <div className="flex gap-3">
           <Button variant="outline" icon={<Filter className="w-4 h-4" />} onClick={() => setShowFilters(!showFilters)}>
@@ -134,16 +144,17 @@ const ProductsPage: React.FC = () => {
             exit={{ height: 0, opacity: 0 }}
             className="overflow-hidden"
           >
-            <div className="flex flex-wrap gap-4 p-4 rounded-xl border border-white/10 bg-white/5">
+            <div className="flex flex-wrap gap-4 rounded-xl border border-[var(--app-border)] bg-[var(--app-surface)] p-4">
               <div>
-                <p className="text-xs text-gray-400 mb-2">Categoría</p>
+                <p className="mb-2 text-xs text-[var(--app-text-muted)]">Categoría</p>
                 <div className="flex flex-wrap gap-2">
                   {categories.map((c) => (
                     <button
+                      type="button"
                       key={c}
                       onClick={() => { setCategory(c); setPage(1); }}
                       className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                        category === c ? 'bg-indigo-500 text-white' : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                        category === c ? 'bg-[var(--app-primary)] text-white' : 'bg-[var(--app-surface-soft)] text-[var(--app-text-muted)] hover:bg-[var(--app-primary-soft)] hover:text-[var(--app-text)]'
                       }`}
                     >
                       {c}
@@ -152,14 +163,15 @@ const ProductsPage: React.FC = () => {
                 </div>
               </div>
               <div>
-                <p className="text-xs text-gray-400 mb-2">Estado</p>
+                <p className="mb-2 text-xs text-[var(--app-text-muted)]">Estado</p>
                 <div className="flex flex-wrap gap-2">
                   {statusFilters.map((s) => (
                     <button
+                      type="button"
                       key={s.value}
                       onClick={() => { setStatusFilter(s.value); setPage(1); }}
                       className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                        statusFilter === s.value ? 'bg-indigo-500 text-white' : 'bg-white/5 text-gray-400 hover:bg-white/10'
+                        statusFilter === s.value ? 'bg-[var(--app-primary)] text-white' : 'bg-[var(--app-surface-soft)] text-[var(--app-text-muted)] hover:bg-[var(--app-primary-soft)] hover:text-[var(--app-text)]'
                       }`}
                     >
                       {s.label}
@@ -209,13 +221,13 @@ const ProductsPage: React.FC = () => {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-lg rounded-2xl border border-white/10 bg-[#1a1a2e] p-6 max-h-[90vh] overflow-y-auto"
+              className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface-strong)] p-6 shadow-[var(--app-shadow)]"
             >
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-bold text-white">
+                <h2 className="text-lg font-bold text-[var(--app-text)]">
                   {editProduct ? 'Editar producto' : 'Nuevo producto'}
                 </h2>
-                <button onClick={() => setModalOpen(false)} className="text-gray-400 hover:text-white">
+                <button type="button" onClick={() => setModalOpen(false)} className="text-[var(--app-text-muted)] hover:text-[var(--app-text)]">
                   <X className="w-5 h-5" />
                 </button>
               </div>
@@ -230,11 +242,11 @@ const ProductsPage: React.FC = () => {
                 <Input label="SKU" value={form.sku} onChange={(e) => setForm({ ...form, sku: e.target.value })} />
                 <Input label="URL de imagen" value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} />
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-1.5">Categoría</label>
+                  <label className="mb-1.5 block text-sm font-medium text-[var(--app-text-muted)]">Categoría</label>
                   <select
                     value={form.category}
                     onChange={(e) => setForm({ ...form, category: e.target.value })}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                    className="w-full rounded-xl border border-[var(--app-border)] bg-[var(--app-surface-soft)] px-4 py-2.5 text-sm text-[var(--app-text)] focus:outline-none focus:ring-2 focus:ring-[var(--app-primary-soft)]"
                   >
                     {categories.filter((c) => c !== 'Todos').map((c) => <option key={c} value={c}>{c}</option>)}
                   </select>
