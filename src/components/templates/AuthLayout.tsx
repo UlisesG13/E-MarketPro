@@ -3,10 +3,10 @@ import { Outlet } from 'react-router-dom';
 
 const AuthLayout: React.FC = () => {
   return (
-    <div className="min-h-screen bg-[#0a0a14] flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="app-shell relative flex min-h-screen items-center justify-center overflow-hidden p-4">
       {/* Background gradient effects */}
-      <div className="absolute top-1/4 -left-32 w-96 h-96 bg-indigo-500/20 rounded-full blur-[128px] pointer-events-none" />
-      <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-violet-500/20 rounded-full blur-[128px] pointer-events-none" />
+      <div className="pointer-events-none absolute -left-32 top-1/4 h-96 w-96 rounded-full bg-[var(--app-primary-soft)] blur-[128px]" />
+      <div className="pointer-events-none absolute -right-32 bottom-1/4 h-96 w-96 rounded-full bg-[var(--app-secondary-soft)] blur-[128px]" />
       <Outlet />
     </div>
   );

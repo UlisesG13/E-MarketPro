@@ -68,26 +68,68 @@ const AccountPage: React.FC = () => {
     <div className="space-y-8 px-6 py-10">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-3xl font-black text-white">Mi cuenta</h1>
-          <p className="mt-1 text-sm text-gray-400">
+          <h1 className="text-3xl font-black text-[var(--app-text)]">Mi cuenta</h1>
+          <p className="mt-1 text-sm text-[var(--app-text-muted)]">
             Gestiona tus datos, direcciones y preferencias desde un solo lugar.
           </p>
         </div>
         <Link
           to="/account/orders"
-          className="rounded-xl border border-white/10 px-4 py-2 text-sm font-medium text-gray-300 transition-colors hover:border-white/20 hover:bg-white/5 hover:text-white"
+          className="rounded-xl border border-[var(--app-border)] px-4 py-2 text-sm font-medium text-[var(--app-text-muted)] transition-colors hover:border-[var(--app-border-strong)] hover:bg-[var(--app-surface-soft)] hover:text-[var(--app-text)]"
         >
           Ver historial de pedidos
         </Link>
       </div>
 
+      <div className="flex flex-wrap gap-3">
+        <a
+          href="#perfil"
+          className="rounded-full bg-[var(--app-primary-soft)] px-4 py-2 text-sm font-medium text-[var(--app-primary)]"
+        >
+          Perfil
+        </a>
+        <a
+          href="#preferencias"
+          className="rounded-full border border-[var(--app-border)] px-4 py-2 text-sm font-medium text-[var(--app-text-muted)] transition-colors hover:border-[var(--app-border-strong)] hover:text-[var(--app-text)]"
+        >
+          Preferencias
+        </a>
+        <a
+          href="#direcciones"
+          className="rounded-full border border-[var(--app-border)] px-4 py-2 text-sm font-medium text-[var(--app-text-muted)] transition-colors hover:border-[var(--app-border-strong)] hover:text-[var(--app-text)]"
+        >
+          Direcciones
+        </a>
+      </div>
+
+      <section className="grid gap-4 md:grid-cols-3">
+        {[
+          { label: 'Direcciones activas', value: String(addresses.length) },
+          { label: 'Preferencias activadas', value: `${Object.values(preferences).filter(Boolean).length}/3` },
+          { label: 'Correo principal', value: profile.email },
+        ].map((item) => (
+          <article
+            key={item.label}
+            className="rounded-[24px] border border-[var(--app-border)] bg-[var(--app-surface)] p-5 shadow-[var(--app-shadow)]"
+          >
+            <p className="text-xs uppercase tracking-[0.18em] text-[var(--app-text-soft)]">
+              {item.label}
+            </p>
+            <p className="mt-3 text-lg font-semibold text-[var(--app-text)]">{item.value}</p>
+          </article>
+        ))}
+      </section>
+
       <section className="grid gap-6 xl:grid-cols-[1fr_1fr]">
-        <article className="rounded-[28px] border border-white/10 bg-white/[0.04] p-6">
+        <article
+          id="perfil"
+          className="rounded-[28px] border border-[var(--app-border)] bg-[var(--app-surface)] p-6 shadow-[var(--app-shadow)]"
+        >
           <div className="mb-5 flex items-center gap-3">
-            <UserRound className="h-5 w-5 text-indigo-400" />
+            <UserRound className="h-5 w-5 text-[var(--app-primary)]" />
             <div>
-              <h2 className="text-lg font-semibold text-white">Datos personales</h2>
-              <p className="text-sm text-gray-400">Información principal de tu cuenta.</p>
+              <h2 className="text-lg font-semibold text-[var(--app-text)]">Datos personales</h2>
+              <p className="text-sm text-[var(--app-text-muted)]">Información principal de tu cuenta.</p>
             </div>
           </div>
 
@@ -122,12 +164,15 @@ const AccountPage: React.FC = () => {
           </Button>
         </article>
 
-        <article className="rounded-[28px] border border-white/10 bg-white/[0.04] p-6">
+        <article
+          id="preferencias"
+          className="rounded-[28px] border border-[var(--app-border)] bg-[var(--app-surface)] p-6 shadow-[var(--app-shadow)]"
+        >
           <div className="mb-5 flex items-center gap-3">
-            <Settings2 className="h-5 w-5 text-cyan-400" />
+            <Settings2 className="h-5 w-5 text-[var(--app-accent)]" />
             <div>
-              <h2 className="text-lg font-semibold text-white">Configuración</h2>
-              <p className="text-sm text-gray-400">Ajusta cómo quieres recibir información.</p>
+              <h2 className="text-lg font-semibold text-[var(--app-text)]">Configuración</h2>
+              <p className="text-sm text-[var(--app-text-muted)]">Ajusta cómo quieres recibir información.</p>
             </div>
           </div>
 
@@ -151,11 +196,11 @@ const AccountPage: React.FC = () => {
             ].map((item) => (
               <label
                 key={item.key}
-                className="flex items-start justify-between gap-4 rounded-2xl border border-white/10 bg-white/5 p-4"
+                className="flex items-start justify-between gap-4 rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface-soft)] p-4"
               >
                 <div>
-                  <p className="font-medium text-white">{item.label}</p>
-                  <p className="mt-1 text-sm text-gray-400">{item.description}</p>
+                  <p className="font-medium text-[var(--app-text)]">{item.label}</p>
+                  <p className="mt-1 text-sm text-[var(--app-text-muted)]">{item.description}</p>
                 </div>
                 <input
                   type="checkbox"
@@ -163,15 +208,15 @@ const AccountPage: React.FC = () => {
                   onChange={(event) =>
                     savePreferences({ [item.key]: event.target.checked })
                   }
-                  className="mt-1 h-4 w-4 rounded border-white/20 bg-white/10 text-indigo-500"
+                  className="mt-1 h-4 w-4 rounded border-[var(--app-border)] bg-[var(--app-surface-soft)] text-[var(--app-primary)]"
                 />
               </label>
             ))}
           </div>
 
-          <div className="mt-5 rounded-2xl border border-indigo-500/20 bg-indigo-500/5 p-4 text-sm text-gray-300">
+          <div className="mt-5 rounded-2xl border border-[var(--app-border-strong)] bg-[var(--app-primary-soft)] p-4 text-sm text-[var(--app-text-muted)]">
             <div className="flex items-start gap-3">
-              <BellRing className="mt-0.5 h-5 w-5 text-indigo-300" />
+              <BellRing className="mt-0.5 h-5 w-5 text-[var(--app-primary)]" />
               Tus preferencias quedan guardadas para mantener el flujo del cliente consistente en
               futuras visitas.
             </div>
@@ -179,13 +224,16 @@ const AccountPage: React.FC = () => {
         </article>
       </section>
 
-      <section className="rounded-[28px] border border-white/10 bg-white/[0.04] p-6">
+      <section
+        id="direcciones"
+        className="rounded-[28px] border border-[var(--app-border)] bg-[var(--app-surface)] p-6 shadow-[var(--app-shadow)]"
+      >
         <div className="mb-5 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <MapPinned className="h-5 w-5 text-violet-400" />
+            <MapPinned className="h-5 w-5 text-[var(--app-secondary)]" />
             <div>
-              <h2 className="text-lg font-semibold text-white">Direcciones</h2>
-              <p className="text-sm text-gray-400">Tus destinos frecuentes para compra.</p>
+              <h2 className="text-lg font-semibold text-[var(--app-text)]">Direcciones</h2>
+              <p className="text-sm text-[var(--app-text-muted)]">Tus destinos frecuentes para compra.</p>
             </div>
           </div>
           <Badge variant="purple">{addresses.length} guardada(s)</Badge>
@@ -196,19 +244,19 @@ const AccountPage: React.FC = () => {
             {addresses.map((address) => (
               <article
                 key={address.id}
-                className="rounded-2xl border border-white/10 bg-white/5 p-4"
+                className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface-soft)] p-4"
               >
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                   <div>
                     <div className="flex items-center gap-2">
-                      <h3 className="font-semibold text-white">{address.label}</h3>
+                      <h3 className="font-semibold text-[var(--app-text)]">{address.label}</h3>
                       {address.isDefault && <Badge variant="success">Predeterminada</Badge>}
                     </div>
-                    <p className="mt-2 text-sm text-gray-300">{address.recipient}</p>
-                    <p className="text-sm text-gray-400">
+                    <p className="mt-2 text-sm text-[var(--app-text)]">{address.recipient}</p>
+                    <p className="text-sm text-[var(--app-text-muted)]">
                       {address.street}, {address.city}, {address.state}, {address.zipCode}
                     </p>
-                    <p className="text-sm text-gray-500">{address.phone}</p>
+                    <p className="text-sm text-[var(--app-text-soft)]">{address.phone}</p>
                   </div>
 
                   <div className="flex gap-2">
@@ -216,7 +264,7 @@ const AccountPage: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => updateAddress(address.id, { isDefault: true })}
-                        className="rounded-xl border border-white/10 px-3 py-2 text-sm text-gray-300 transition-colors hover:bg-white/5 hover:text-white"
+                        className="rounded-xl border border-[var(--app-border)] px-3 py-2 text-sm text-[var(--app-text-muted)] transition-colors hover:bg-[var(--app-surface-soft)] hover:text-[var(--app-text)]"
                       >
                         Hacer principal
                       </button>
@@ -234,10 +282,10 @@ const AccountPage: React.FC = () => {
             ))}
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-black/20 p-5">
+          <div className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface-soft)] p-5">
             <div className="mb-4 flex items-center gap-2">
-              <Plus className="h-4 w-4 text-indigo-400" />
-              <p className="font-semibold text-white">Agregar dirección</p>
+              <Plus className="h-4 w-4 text-[var(--app-primary)]" />
+              <p className="font-semibold text-[var(--app-text)]">Agregar dirección</p>
             </div>
             <div className="grid gap-3">
               <Input
@@ -301,7 +349,7 @@ const AccountPage: React.FC = () => {
                       isDefault: event.target.checked,
                     }))
                   }
-                  className="h-4 w-4 rounded border-white/20 bg-white/10 text-indigo-500"
+                  className="h-4 w-4 rounded border-[var(--app-border)] bg-[var(--app-surface-soft)] text-[var(--app-primary)]"
                 />
                 Guardar como dirección principal
               </label>

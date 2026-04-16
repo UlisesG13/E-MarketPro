@@ -58,26 +58,31 @@ const StatCard = React.memo<StatCardProps>(function StatCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay }}
       className={cn(
-        'relative group p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm overflow-hidden',
-        'hover:border-indigo-500/30 transition-all duration-300',
+        'relative group overflow-hidden rounded-2xl border p-6 backdrop-blur-sm',
+        'border-[var(--app-border)] bg-[var(--app-surface)] hover:border-[var(--app-border-strong)] transition-all duration-300',
         className
       )}
     >
       {/* Spotlight effect on hover */}
-      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-indigo-500/5 via-transparent to-violet-500/5 pointer-events-none" />
+      <div className="absolute inset-0 pointer-events-none bg-gradient-to-br from-[var(--app-primary-soft)] via-transparent to-[var(--app-secondary-soft)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
       <div className="relative flex items-start justify-between">
         <div className="space-y-2">
-          <p className="text-sm text-gray-400">{label}</p>
-          <p className="text-3xl font-bold text-white tracking-tight">
+          <p className="text-sm text-[var(--app-text-muted)]">{label}</p>
+          <p className="text-3xl font-bold tracking-tight text-[var(--app-text)]">
             <AnimatedNumber value={value} prefix={prefix} suffix={suffix} />
           </p>
-          <div className={cn('flex items-center gap-1 text-xs font-medium', isPositive ? 'text-emerald-400' : 'text-red-400')}>
+          <div
+            className={cn(
+              'flex items-center gap-1 text-xs font-medium',
+              isPositive ? 'text-[var(--app-success)]' : 'text-[var(--app-danger)]'
+            )}
+          >
             {isPositive ? <TrendingUp className="w-3.5 h-3.5" /> : <TrendingDown className="w-3.5 h-3.5" />}
             <span>{isPositive ? '+' : ''}{trend}% vs mes anterior</span>
           </div>
         </div>
-        <div className="p-3 rounded-xl bg-indigo-500/10 text-indigo-400 group-hover:bg-indigo-500/20 transition-colors">
+        <div className="rounded-xl bg-[var(--app-primary-soft)] p-3 text-[var(--app-primary)] transition-opacity group-hover:opacity-90">
           {icon}
         </div>
       </div>

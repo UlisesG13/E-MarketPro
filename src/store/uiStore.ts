@@ -1,6 +1,10 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+function applyTheme(isDark: boolean) {
+  document.documentElement.classList.toggle('dark', isDark);
+}
+
 interface UIState {
   sidebarOpen: boolean;
   darkMode: boolean;
@@ -17,11 +21,7 @@ export const useUIStore = create<UIState>()(
       toggleSidebar: () => set({ sidebarOpen: !get().sidebarOpen }),
       toggleDarkMode: () => {
         const next = !get().darkMode;
-        if (next) {
-          document.documentElement.classList.add('dark');
-        } else {
-          document.documentElement.classList.remove('dark');
-        }
+        applyTheme(next);
         set({ darkMode: next });
       },
       setSidebarOpen: (open: boolean) => set({ sidebarOpen: open }),
@@ -29,11 +29,7 @@ export const useUIStore = create<UIState>()(
     {
       name: 'emarketpro-ui',
       onRehydrateStorage: () => (state) => {
-        if (state?.darkMode) {
-          document.documentElement.classList.add('dark');
-        } else {
-          document.documentElement.classList.remove('dark');
-        }
+        applyTheme(state?.darkMode ?? true);
       },
     }
   )

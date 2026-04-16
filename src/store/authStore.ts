@@ -23,7 +23,10 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       isAuthenticated: false,
       login: (email: string, password: string) => {
-        if (email === 'demo@emarketpro.mx' && password === 'demo123') {
+        const normalizedEmail = email.trim().toLowerCase();
+        const normalizedPassword = password.trim();
+
+        if (normalizedEmail === 'demo@emarketpro.mx' && normalizedPassword === 'demo123') {
           set({ user: DEMO_USER, isAuthenticated: true });
           return true;
         }

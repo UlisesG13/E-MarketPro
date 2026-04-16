@@ -11,21 +11,21 @@ interface BadgeProps {
 }
 
 const variantStyles: Record<BadgeVariant, string> = {
-  default: 'bg-gray-500/10 text-gray-400 border-gray-500/20',
-  success: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-  warning: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
-  danger: 'bg-red-500/10 text-red-400 border-red-500/20',
-  info: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20',
-  purple: 'bg-violet-500/10 text-violet-400 border-violet-500/20',
+  default: 'bg-[var(--app-surface-soft)] text-[var(--app-text-muted)] border-[var(--app-border)]',
+  success: 'bg-[rgba(16,185,129,0.12)] text-[var(--app-success)] border-[rgba(16,185,129,0.22)]',
+  warning: 'bg-[rgba(245,158,11,0.12)] text-[var(--app-warning)] border-[rgba(245,158,11,0.22)]',
+  danger: 'bg-[rgba(239,68,68,0.12)] text-[var(--app-danger)] border-[rgba(239,68,68,0.22)]',
+  info: 'bg-[var(--app-accent-soft)] text-[var(--app-accent)] border-[rgba(56,189,248,0.22)]',
+  purple: 'bg-[var(--app-secondary-soft)] text-[var(--app-secondary)] border-[rgba(15,118,110,0.22)]',
 };
 
 const dotColors: Record<BadgeVariant, string> = {
-  default: 'bg-gray-400',
-  success: 'bg-emerald-400',
-  warning: 'bg-amber-400',
-  danger: 'bg-red-400',
-  info: 'bg-cyan-400',
-  purple: 'bg-violet-400',
+  default: 'bg-[var(--app-text-soft)]',
+  success: 'bg-[var(--app-success)]',
+  warning: 'bg-[var(--app-warning)]',
+  danger: 'bg-[var(--app-danger)]',
+  info: 'bg-[var(--app-accent)]',
+  purple: 'bg-[var(--app-secondary)]',
 };
 
 const Badge = React.memo<BadgeProps>(function Badge({ children, variant = 'default', className, dot }) {

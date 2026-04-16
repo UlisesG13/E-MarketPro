@@ -56,8 +56,8 @@ const OrdersPage: React.FC = () => {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-white">Órdenes</h1>
-        <p className="text-gray-400 text-sm mt-1">{filtered.length} órdenes encontradas</p>
+        <h1 className="text-2xl font-bold text-[var(--app-text)]">Órdenes</h1>
+        <p className="mt-1 text-sm text-[var(--app-text-muted)]">{filtered.length} órdenes encontradas</p>
       </div>
 
       {/* Search + Filters */}
@@ -66,11 +66,12 @@ const OrdersPage: React.FC = () => {
         <div className="flex gap-2 flex-wrap">
           {statusOptions.map((s) => (
             <button
+              type="button"
               key={s.value}
               onClick={() => { setStatusFilter(s.value); setCurrentPage(1); }}
               className={cn(
                 'px-3 py-2 rounded-xl text-xs font-medium transition-colors',
-                statusFilter === s.value ? 'bg-indigo-500 text-white' : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10'
+                statusFilter === s.value ? 'bg-[var(--app-primary)] text-white' : 'border border-[var(--app-border)] bg-[var(--app-surface-soft)] text-[var(--app-text-muted)] hover:bg-[var(--app-primary-soft)] hover:text-[var(--app-text)]'
               )}
             >
               {s.label}
@@ -80,17 +81,17 @@ const OrdersPage: React.FC = () => {
       </div>
 
       {/* Table */}
-      <div className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden">
+      <div className="overflow-hidden rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] shadow-[var(--app-shadow)]">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-white/10 bg-white/5">
-                <th className="text-left p-4 text-gray-400 font-medium">ID</th>
-                <th className="text-left p-4 text-gray-400 font-medium">Cliente</th>
-                <th className="text-left p-4 text-gray-400 font-medium hidden md:table-cell">Productos</th>
-                <th className="text-right p-4 text-gray-400 font-medium">Total</th>
-                <th className="text-center p-4 text-gray-400 font-medium">Estado</th>
-                <th className="text-left p-4 text-gray-400 font-medium hidden lg:table-cell">Fecha</th>
+              <tr className="border-b border-[var(--app-border)] bg-[var(--app-surface-soft)]">
+                <th className="p-4 text-left font-medium text-[var(--app-text-muted)]">ID</th>
+                <th className="p-4 text-left font-medium text-[var(--app-text-muted)]">Cliente</th>
+                <th className="hidden p-4 text-left font-medium text-[var(--app-text-muted)] md:table-cell">Productos</th>
+                <th className="p-4 text-right font-medium text-[var(--app-text-muted)]">Total</th>
+                <th className="p-4 text-center font-medium text-[var(--app-text-muted)]">Estado</th>
+                <th className="hidden p-4 text-left font-medium text-[var(--app-text-muted)] lg:table-cell">Fecha</th>
               </tr>
             </thead>
             <tbody>
@@ -101,17 +102,17 @@ const OrdersPage: React.FC = () => {
                     key={order.id}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="border-b border-white/5 hover:bg-white/5 cursor-pointer transition-colors"
+                    className="cursor-pointer border-b border-[var(--app-border)] transition-colors hover:bg-[var(--app-surface-soft)]"
                     onClick={() => setSelectedOrder(order)}
                   >
-                    <td className="p-4 text-indigo-400 font-mono text-xs">{order.id}</td>
-                    <td className="p-4 text-white">{order.customerName}</td>
-                    <td className="p-4 text-gray-400 hidden md:table-cell">{order.items.length} artículo(s)</td>
-                    <td className="p-4 text-white font-medium text-right">{formatCurrency(order.total)}</td>
+                    <td className="p-4 font-mono text-xs text-[var(--app-primary)]">{order.id}</td>
+                    <td className="p-4 text-[var(--app-text)]">{order.customerName}</td>
+                    <td className="hidden p-4 text-[var(--app-text-muted)] md:table-cell">{order.items.length} artículo(s)</td>
+                    <td className="p-4 text-right font-medium text-[var(--app-text)]">{formatCurrency(order.total)}</td>
                     <td className="p-4 text-center">
                       <Badge variant={status.variant} dot>{status.label}</Badge>
                     </td>
-                    <td className="p-4 text-gray-400 hidden lg:table-cell">{formatDate(order.date)}</td>
+                    <td className="hidden p-4 text-[var(--app-text-muted)] lg:table-cell">{formatDate(order.date)}</td>
                   </motion.tr>
                 );
               })}
@@ -120,8 +121,8 @@ const OrdersPage: React.FC = () => {
         </div>
 
         {/* Pagination */}
-        <div className="flex items-center justify-between p-4 border-t border-white/5">
-          <p className="text-xs text-gray-500">
+        <div className="flex items-center justify-between border-t border-[var(--app-border)] p-4">
+          <p className="text-xs text-[var(--app-text-soft)]">
             Mostrando {(currentPage - 1) * perPage + 1}-{Math.min(currentPage * perPage, filtered.length)} de {filtered.length}
           </p>
           <div className="flex gap-2">
@@ -163,62 +164,62 @@ const OrdersPage: React.FC = () => {
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 30, stiffness: 300 }}
               onClick={(e) => e.stopPropagation()}
-              className="absolute right-0 top-0 bottom-0 w-full max-w-md border-l border-white/10 bg-[#0f0f1a] overflow-y-auto"
+              className="absolute bottom-0 right-0 top-0 w-full max-w-md overflow-y-auto border-l border-[var(--app-border)] bg-[var(--app-surface-strong)] shadow-[var(--app-shadow)]"
             >
               <div className="p-6 space-y-6">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-lg font-bold text-white">Detalle de orden</h2>
-                  <button onClick={() => setSelectedOrder(null)} className="text-gray-400 hover:text-white">
+                  <h2 className="text-lg font-bold text-[var(--app-text)]">Detalle de orden</h2>
+                  <button type="button" onClick={() => setSelectedOrder(null)} className="text-[var(--app-text-muted)] hover:text-[var(--app-text)]">
                     <X className="w-5 h-5" />
                   </button>
                 </div>
 
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-indigo-400 font-mono text-sm">{selectedOrder.id}</span>
+                    <span className="font-mono text-sm text-[var(--app-primary)]">{selectedOrder.id}</span>
                     <Badge variant={statusConfig[selectedOrder.status].variant} dot>
                       {statusConfig[selectedOrder.status].label}
                     </Badge>
                   </div>
 
-                  <div className="p-4 rounded-xl bg-white/5 border border-white/10 space-y-3">
+                  <div className="space-y-3 rounded-xl border border-[var(--app-border)] bg-[var(--app-surface-soft)] p-4">
                     <div>
-                      <p className="text-xs text-gray-500">Cliente</p>
-                      <p className="text-sm text-white font-medium">{selectedOrder.customerName}</p>
-                      <p className="text-xs text-gray-400">{selectedOrder.customerEmail}</p>
+                      <p className="text-xs text-[var(--app-text-soft)]">Cliente</p>
+                      <p className="text-sm font-medium text-[var(--app-text)]">{selectedOrder.customerName}</p>
+                      <p className="text-xs text-[var(--app-text-muted)]">{selectedOrder.customerEmail}</p>
                     </div>
                     <div>
-                      <p className="text-xs text-gray-500">Dirección de envío</p>
-                      <p className="text-sm text-gray-300">{selectedOrder.shippingAddress}</p>
+                      <p className="text-xs text-[var(--app-text-soft)]">Dirección de envío</p>
+                      <p className="text-sm text-[var(--app-text-muted)]">{selectedOrder.shippingAddress}</p>
                     </div>
                     <div>
-                      <p className="text-xs text-gray-500">Método de pago</p>
-                      <p className="text-sm text-gray-300">{selectedOrder.paymentMethod}</p>
+                      <p className="text-xs text-[var(--app-text-soft)]">Método de pago</p>
+                      <p className="text-sm text-[var(--app-text-muted)]">{selectedOrder.paymentMethod}</p>
                     </div>
                     <div>
-                      <p className="text-xs text-gray-500">Fecha</p>
-                      <p className="text-sm text-gray-300">{formatDate(selectedOrder.date)}</p>
+                      <p className="text-xs text-[var(--app-text-soft)]">Fecha</p>
+                      <p className="text-sm text-[var(--app-text-muted)]">{formatDate(selectedOrder.date)}</p>
                     </div>
                   </div>
 
                   <div>
-                    <p className="text-sm font-medium text-white mb-3">Productos</p>
+                    <p className="mb-3 text-sm font-medium text-[var(--app-text)]">Productos</p>
                     <div className="space-y-2">
                       {selectedOrder.items.map((item, i) => (
-                        <div key={i} className="flex justify-between items-center p-3 rounded-xl bg-white/5 border border-white/10">
+                        <div key={i} className="flex items-center justify-between rounded-xl border border-[var(--app-border)] bg-[var(--app-surface-soft)] p-3">
                           <div>
-                            <p className="text-sm text-white">{item.productName}</p>
-                            <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
+                            <p className="text-sm text-[var(--app-text)]">{item.productName}</p>
+                            <p className="text-xs text-[var(--app-text-soft)]">Qty: {item.quantity}</p>
                           </div>
-                          <p className="text-sm text-white font-medium">{formatCurrency(item.price * item.quantity)}</p>
+                          <p className="text-sm font-medium text-[var(--app-text)]">{formatCurrency(item.price * item.quantity)}</p>
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  <div className="flex justify-between items-center p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
-                    <span className="text-sm font-medium text-indigo-300">Total</span>
-                    <span className="text-xl font-bold text-white">{formatCurrency(selectedOrder.total)}</span>
+                  <div className="flex items-center justify-between rounded-xl border border-[var(--app-border-strong)] bg-[var(--app-primary-soft)] p-4">
+                    <span className="text-sm font-medium text-[var(--app-primary)]">Total</span>
+                    <span className="text-xl font-bold text-[var(--app-text)]">{formatCurrency(selectedOrder.total)}</span>
                   </div>
                 </div>
               </div>

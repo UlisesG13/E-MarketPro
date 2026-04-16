@@ -44,22 +44,22 @@ const LoginPage: React.FC = () => {
       transition={{ duration: 0.5 }}
       className="w-full max-w-md"
     >
-      <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-8">
+      <div className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] p-8 shadow-[var(--app-shadow)] backdrop-blur-xl">
         {/* Logo */}
         <div className="flex items-center gap-3 mb-8">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[linear-gradient(135deg,var(--app-primary),var(--app-secondary))]">
             <Zap className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-white">E-Market<span className="text-indigo-400">Pro</span></h1>
-            <p className="text-xs text-gray-500">Panel de administración</p>
+            <h1 className="text-xl font-bold text-[var(--app-text)]">E-Market<span className="text-[var(--app-primary)]">Pro</span></h1>
+            <p className="text-xs text-[var(--app-text-soft)]">Panel de administración</p>
           </div>
         </div>
 
         {/* Heading */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-white mb-2">Iniciar sesión</h2>
-          <p className="text-sm text-gray-400">Ingresa tus credenciales para acceder al dashboard</p>
+          <h2 className="mb-2 text-2xl font-bold text-[var(--app-text)]">Iniciar sesión</h2>
+          <p className="text-sm text-[var(--app-text-muted)]">Ingresa tus credenciales para acceder al dashboard</p>
         </div>
 
         {/* Form */}
@@ -94,12 +94,13 @@ const LoginPage: React.FC = () => {
         </form>
 
         {/* Demo credentials */}
-        <div className="mt-6 p-4 rounded-xl bg-indigo-500/5 border border-indigo-500/20">
-          <p className="text-xs text-indigo-300 font-medium mb-2">Credenciales demo:</p>
-          <p className="text-xs text-gray-400 font-mono">demo@emarketpro.mx / demo123</p>
+        <div className="mt-6 rounded-xl border border-[var(--app-border-strong)] bg-[var(--app-primary-soft)] p-4">
+          <p className="mb-2 text-xs font-medium text-[var(--app-primary)]">Credenciales demo:</p>
+          <p className="font-mono text-xs text-[var(--app-text-muted)]">demo@emarketpro.mx / demo123</p>
           <button
+            type="button"
             onClick={fillDemo}
-            className="mt-2 text-xs text-indigo-400 hover:text-indigo-300 transition-colors font-medium"
+            className="mt-2 text-xs font-medium text-[var(--app-primary)] transition-colors hover:opacity-80"
           >
             Llenar automáticamente →
           </button>
@@ -107,7 +108,7 @@ const LoginPage: React.FC = () => {
       </div>
 
       {/* Footer */}
-      <p className="mt-6 text-center text-xs text-gray-600">
+      <p className="mt-6 text-center text-xs text-[var(--app-text-soft)]">
         Universidad Politécnica de Chiapas · Grupo 8-B · Análisis Financiero
       </p>
     </motion.div>

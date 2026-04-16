@@ -18,19 +18,19 @@ const SettingsPage: React.FC = () => {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-white">Configuración</h1>
-        <p className="text-gray-400 text-sm mt-1">Equipo de desarrollo, salarios e integraciones</p>
+        <h1 className="text-2xl font-bold text-[var(--app-text)]">Configuración</h1>
+        <p className="mt-1 text-sm text-[var(--app-text-muted)]">Equipo de desarrollo, salarios e integraciones</p>
       </div>
 
       {/* Team Members */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden"
+        className="overflow-hidden rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] shadow-[var(--app-shadow)]"
       >
-        <div className="p-6 border-b border-white/5 flex items-center gap-3">
-          <UserCircle className="w-5 h-5 text-indigo-400" />
-          <h3 className="text-lg font-semibold text-white">Equipo de desarrollo</h3>
+        <div className="flex items-center gap-3 border-b border-[var(--app-border)] p-6">
+          <UserCircle className="w-5 h-5 text-[var(--app-primary)]" />
+          <h3 className="text-lg font-semibold text-[var(--app-text)]">Equipo de desarrollo</h3>
         </div>
         <div className="grid md:grid-cols-2 gap-4 p-6">
           {teamMembers.map((member, i) => (
@@ -39,17 +39,17 @@ const SettingsPage: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
-              className="flex items-center gap-4 p-4 rounded-xl border border-white/10 bg-white/5 hover:border-indigo-500/30 transition-colors"
+              className="flex items-center gap-4 rounded-xl border border-[var(--app-border)] bg-[var(--app-surface-soft)] p-4 transition-colors hover:border-[var(--app-border-strong)]"
             >
               <Avatar name={member.name} size="lg" />
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-white">{member.name}</p>
+                <p className="text-sm font-semibold text-[var(--app-text)]">{member.name}</p>
                 <Badge variant={roleColors[member.role] || 'default'} className="mt-1">{member.role}</Badge>
-                <p className="text-xs text-gray-500 mt-1">{member.email}</p>
+                <p className="mt-1 text-xs text-[var(--app-text-soft)]">{member.email}</p>
               </div>
               <div className="text-right shrink-0">
-                <p className="text-lg font-bold text-white">{formatCurrency(member.hourlyRate)}</p>
-                <p className="text-xs text-gray-500">por hora</p>
+                <p className="text-lg font-bold text-[var(--app-text)]">{formatCurrency(member.hourlyRate)}</p>
+                <p className="text-xs text-[var(--app-text-soft)]">por hora</p>
               </div>
             </motion.div>
           ))}
@@ -61,33 +61,33 @@ const SettingsPage: React.FC = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="rounded-2xl border border-white/10 bg-white/5 overflow-hidden"
+        className="overflow-hidden rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] shadow-[var(--app-shadow)]"
       >
-        <div className="p-6 border-b border-white/5 flex items-center gap-3">
+        <div className="flex items-center gap-3 border-b border-[var(--app-border)] p-6">
           <CreditCard className="w-5 h-5 text-emerald-400" />
-          <h3 className="text-lg font-semibold text-white">Tabla de salarios</h3>
+          <h3 className="text-lg font-semibold text-[var(--app-text)]">Tabla de salarios</h3>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-white/10 bg-white/5">
-                <th className="text-left p-4 text-gray-400 font-medium">Nombre</th>
-                <th className="text-left p-4 text-gray-400 font-medium">Rol</th>
-                <th className="text-right p-4 text-gray-400 font-medium">Sueldo/Hora</th>
-                <th className="text-right p-4 text-gray-400 font-medium">Sueldo/Día (8h)</th>
-                <th className="text-right p-4 text-gray-400 font-medium">Sueldo/Mes (160h)</th>
+              <tr className="border-b border-[var(--app-border)] bg-[var(--app-surface-soft)]">
+                <th className="p-4 text-left font-medium text-[var(--app-text-muted)]">Nombre</th>
+                <th className="p-4 text-left font-medium text-[var(--app-text-muted)]">Rol</th>
+                <th className="p-4 text-right font-medium text-[var(--app-text-muted)]">Sueldo/Hora</th>
+                <th className="p-4 text-right font-medium text-[var(--app-text-muted)]">Sueldo/Día (8h)</th>
+                <th className="p-4 text-right font-medium text-[var(--app-text-muted)]">Sueldo/Mes (160h)</th>
               </tr>
             </thead>
             <tbody>
               {teamMembers.map((m) => (
-                <tr key={m.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                  <td className="p-4 text-white font-medium">{m.name}</td>
+                <tr key={m.id} className="border-b border-[var(--app-border)] transition-colors hover:bg-[var(--app-surface-soft)]">
+                  <td className="p-4 font-medium text-[var(--app-text)]">{m.name}</td>
                   <td className="p-4">
                     <Badge variant={roleColors[m.role] || 'default'}>{m.role}</Badge>
                   </td>
-                  <td className="p-4 text-white text-right">{formatCurrency(m.hourlyRate)}</td>
-                  <td className="p-4 text-gray-300 text-right">{formatCurrency(m.hourlyRate * 8)}</td>
-                  <td className="p-4 text-white font-semibold text-right">{formatCurrency(m.hourlyRate * 160)}</td>
+                  <td className="p-4 text-right text-[var(--app-text)]">{formatCurrency(m.hourlyRate)}</td>
+                  <td className="p-4 text-right text-[var(--app-text-muted)]">{formatCurrency(m.hourlyRate * 8)}</td>
+                  <td className="p-4 text-right font-semibold text-[var(--app-text)]">{formatCurrency(m.hourlyRate * 160)}</td>
                 </tr>
               ))}
             </tbody>
@@ -100,11 +100,11 @@ const SettingsPage: React.FC = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
-        className="rounded-2xl border border-white/10 bg-white/5 p-6"
+        className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] p-6 shadow-[var(--app-shadow)]"
       >
         <div className="flex items-center gap-3 mb-6">
-          <Globe className="w-5 h-5 text-cyan-400" />
-          <h3 className="text-lg font-semibold text-white">Configuración de la tienda</h3>
+          <Globe className="w-5 h-5 text-[var(--app-accent)]" />
+          <h3 className="text-lg font-semibold text-[var(--app-text)]">Configuración de la tienda</h3>
         </div>
         <div className="grid sm:grid-cols-2 gap-6">
           {[
@@ -115,9 +115,9 @@ const SettingsPage: React.FC = () => {
             { label: 'Dominio', value: 'emarketpro.mx' },
             { label: 'Email de contacto', value: 'soporte@emarketpro.mx' },
           ].map((item) => (
-            <div key={item.label} className="p-4 rounded-xl border border-white/10 bg-white/5">
-              <p className="text-xs text-gray-500 mb-1">{item.label}</p>
-              <p className="text-sm text-white font-medium">{item.value}</p>
+            <div key={item.label} className="rounded-xl border border-[var(--app-border)] bg-[var(--app-surface-soft)] p-4">
+              <p className="mb-1 text-xs text-[var(--app-text-soft)]">{item.label}</p>
+              <p className="text-sm font-medium text-[var(--app-text)]">{item.value}</p>
             </div>
           ))}
         </div>
@@ -128,11 +128,11 @@ const SettingsPage: React.FC = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
-        className="rounded-2xl border border-white/10 bg-white/5 p-6"
+        className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface)] p-6 shadow-[var(--app-shadow)]"
       >
         <div className="flex items-center gap-3 mb-6">
-          <Palette className="w-5 h-5 text-violet-400" />
-          <h3 className="text-lg font-semibold text-white">Integraciones de pago</h3>
+          <Palette className="w-5 h-5 text-[var(--app-secondary)]" />
+          <h3 className="text-lg font-semibold text-[var(--app-text)]">Integraciones de pago</h3>
         </div>
         <div className="grid sm:grid-cols-3 gap-4">
           {[
@@ -142,11 +142,11 @@ const SettingsPage: React.FC = () => {
           ].map((integration) => (
             <div
               key={integration.name}
-              className="p-4 rounded-xl border border-white/10 bg-white/5 flex items-center justify-between"
+              className="flex items-center justify-between rounded-xl border border-[var(--app-border)] bg-[var(--app-surface-soft)] p-4"
             >
               <div>
-                <p className="text-sm font-medium text-white">{integration.name}</p>
-                <p className="text-xs text-gray-500">{integration.status}</p>
+                <p className="text-sm font-medium text-[var(--app-text)]">{integration.name}</p>
+                <p className="text-xs text-[var(--app-text-soft)]">{integration.status}</p>
               </div>
               <div className={`w-3 h-3 rounded-full ${integration.active ? 'bg-emerald-500' : 'bg-amber-500'}`} />
             </div>
@@ -155,7 +155,7 @@ const SettingsPage: React.FC = () => {
       </motion.div>
 
       {/* University Info */}
-      <div className="text-center py-6 text-xs text-gray-600">
+      <div className="py-6 text-center text-xs text-[var(--app-text-soft)]">
         <p>Universidad Politécnica de Chiapas · Grupo 8-B · Materia: Análisis Financiero</p>
         <p className="mt-1">Proyecto E-MARKET PRO · Marzo 2026</p>
       </div>
