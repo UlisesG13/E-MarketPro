@@ -8,7 +8,7 @@ import {
 import {
   Check, X, ArrowRight, Zap, Crown, Building2,
   BarChart3, CreditCard, Headphones, Puzzle, TrendingUp, DollarSign, Users, ShoppingBag,
-  Package, ShoppingCart, Mail, Brain, Plug, Globe, Activity, Code, Palette, Server, UserCheck, Infinity,
+  Package, ShoppingCart, Mail, Brain, Plug, Globe, Activity, Code, Palette, Server, UserCheck, Infinity as InfinityIcon,
   Shield, Star, Calculator, ChevronRight,
 } from 'lucide-react';
 import { planDetails, pricingPlans, testimonials, faqItems } from '../../services/mockData';
@@ -66,7 +66,7 @@ function LimitBadge({ label, value }: { label: string; value: number | 'unlimite
   return (
     <div className="flex flex-col items-center gap-2 p-4 rounded-2xl border border-white/10 bg-white/5">
       {isUnlimited ? (
-        <Infinity className="w-7 h-7 text-emerald-400" />
+        <InfinityIcon className="w-7 h-7 text-emerald-400" />
       ) : (
         <span className="text-2xl font-bold text-white">{formatNumber(value)}</span>
       )}

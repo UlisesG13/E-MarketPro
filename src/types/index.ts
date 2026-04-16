@@ -109,6 +109,31 @@ export interface CartItem {
   quantity: number;
 }
 
+export interface CustomerAddress {
+  id: string;
+  label: string;
+  recipient: string;
+  phone: string;
+  street: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  references?: string;
+  isDefault?: boolean;
+}
+
+export interface CustomerPreferences {
+  marketingEmails: boolean;
+  orderUpdates: boolean;
+  savedCards: boolean;
+}
+
+export interface CustomerProfile {
+  fullName: string;
+  email: string;
+  phone: string;
+}
+
 export interface AuthUser {
   id: string;
   name: string;
@@ -197,3 +222,8 @@ export interface ChatQuickAction {
   response: string;
 }
 
+export interface StoreOrder extends Order {
+  shippingMethod: string;
+  shippingCost: number;
+  trackingCode?: string;
+}

@@ -10,6 +10,14 @@ import { formatCurrency } from '../../utils/format';
 import { cn } from '../../utils/cn';
 import Button from '../atoms/Button';
 
+const particles = Array.from({ length: 50 }, (_, index) => ({
+  id: index,
+  left: (index * 17) % 100,
+  top: (index * 29) % 100,
+  duration: 3 + (index % 5),
+  delay: (index % 6) * 0.35,
+}));
+
 /* ═══════════ Animated Text ═══════════ */
 function SplitText({ text, className }: { text: string; className?: string }) {
   return (
@@ -33,13 +41,13 @@ function SplitText({ text, className }: { text: string; className?: string }) {
 function ParticlesBackground() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {Array.from({ length: 50 }).map((_, i) => (
+      {particles.map((particle) => (
         <motion.div
-          key={i}
+          key={particle.id}
           className="absolute w-1 h-1 bg-indigo-500/30 rounded-full"
           style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
+            left: `${particle.left}%`,
+            top: `${particle.top}%`,
           }}
           animate={{
             y: [0, -30, 0],
@@ -47,9 +55,9 @@ function ParticlesBackground() {
             scale: [1, 1.5, 1],
           }}
           transition={{
-            duration: 3 + Math.random() * 4,
+            duration: particle.duration,
             repeat: Infinity,
-            delay: Math.random() * 3,
+            delay: particle.delay,
           }}
         />
       ))}
@@ -147,6 +155,7 @@ const LandingPage: React.FC = () => {
             <span className="text-lg font-bold">E-Market<span className="text-indigo-400">Pro</span></span>
           </div>
           <div className="hidden md:flex items-center gap-8">
+            <Link to="/store" className="text-sm text-gray-400 hover:text-white transition-colors">Tienda</Link>
             <a href="#features" className="text-sm text-gray-400 hover:text-white transition-colors">Características</a>
             <a href="#pricing" className="text-sm text-gray-400 hover:text-white transition-colors">Precios</a>
             <a href="#comparison" className="text-sm text-gray-400 hover:text-white transition-colors">Comparativa</a>
@@ -200,8 +209,11 @@ const LandingPage: React.FC = () => {
                 Comenzar gratis
               </Button>
             </Link>
+            <Link to="/store">
+              <Button variant="outline" size="lg">Explorar tienda</Button>
+            </Link>
             <a href="#pricing">
-              <Button variant="outline" size="lg">Ver planes</Button>
+              <Button variant="ghost" size="lg">Ver planes</Button>
             </a>
           </motion.div>
         </div>

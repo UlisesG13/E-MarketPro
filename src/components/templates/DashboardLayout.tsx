@@ -1,9 +1,9 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import Sidebar from '../organisms/Sidebar';
 import Navbar from '../organisms/Navbar';
 import { useUIStore } from '../../store/uiStore';
+import { cn } from '../../utils/cn';
 
 const DashboardLayout: React.FC = () => {
   const sidebarOpen = useUIStore((s) => s.sidebarOpen);
@@ -11,17 +11,17 @@ const DashboardLayout: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#0a0a14] text-white">
       <Sidebar />
-      <motion.div
-        initial={false}
-        animate={{ marginLeft: sidebarOpen ? 260 : 80 }}
-        transition={{ duration: 0.3, ease: 'easeInOut' }}
-        className="flex flex-col min-h-screen"
+      <div
+        className={cn(
+          'ml-0 flex min-h-screen flex-col transition-[margin] duration-300 ease-in-out',
+          sidebarOpen ? 'lg:ml-[260px]' : 'lg:ml-20'
+        )}
       >
         <Navbar />
         <main className="flex-1 p-6 lg:p-8">
           <Outlet />
         </main>
-      </motion.div>
+      </div>
     </div>
   );
 };

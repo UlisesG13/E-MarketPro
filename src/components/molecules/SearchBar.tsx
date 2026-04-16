@@ -37,6 +37,7 @@ const SearchBar = React.memo<SearchBarProps>(function SearchBar({
       />
       {value && (
         <button
+          type="button"
           onClick={() => onChange('')}
           className="absolute right-3 text-gray-500 hover:text-white transition-colors"
           aria-label="Limpiar búsqueda"
