@@ -14,14 +14,15 @@ export interface ProductFilters {
   maxPrice?: number | null;
 }
 
-function normalizeText(value: string) {
-  return value
+function normalizeText(value: string | null | undefined) {
+  const safeValue = value ?? '';
+  return safeValue
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase();
 }
 
-export function slugifyCategory(value: string) {
+export function slugifyCategory(value: string | null | undefined) {
   return normalizeText(value)
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
@@ -32,9 +33,13 @@ export function getCategoryLabel(slug: string, products: Product[]) {
 }
 
 export function getProductCategories(products: Product[]) {
-  return Array.from(new Set(products.map((product) => product.category))).sort((a, b) =>
-    a.localeCompare(b, 'es-MX')
-  );
+  return Array.from(
+    new Set(
+      products
+        .map((product) => product.category)
+        .filter((category): category is string => Boolean(category && category.trim()))
+    )
+  ).sort((a, b) => a.localeCompare(b, 'es-MX'));
 }
 
 export function filterProducts(products: Product[], filters: ProductFilters) {

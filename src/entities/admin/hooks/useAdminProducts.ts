@@ -1,46 +1,39 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { productService } from '../services/productService';
-import type { ProductFilters, CreateProductInput } from '../services/productService';
-import { useAdminAuthStore } from '../store/adminAuthStore';
+import { productService, type ProductoCreateDTO, type ProductoUpdateDTO } from '../services/productService';
 import { ApiError } from '@/shared/services/apiClient';
 
 const productKeys = {
-  all: (storeId: string) => ['products', storeId] as const,
-  filtered: (storeId: string, filters: ProductFilters) => ['products', storeId, filters] as const,
-  detail: (storeId: string, id: string) => ['products', storeId, id] as const,
-  count: (storeId: string) => ['products', storeId, 'count'] as const,
+  all: () => ['products'] as const,
+  detail: (id: string) => ['products', id] as const,
 };
 
-export function useAdminProducts(filters: ProductFilters = {}) {
-  const storeId = useAdminAuthStore((s) => s.store?.id ?? '');
-
-  return useQuery({
-    queryKey: productKeys.filtered(storeId, filters),
-    queryFn: () => productService.getAll(filters),
-    enabled: !!storeId,
-    staleTime: 1000 * 60 * 2,
-  });
+interface ProductFilters {
+  page?: number;
+  limit?: number;
+  status?: string;
+  category?: string;
+  search?: string;
 }
 
-export function useProductCount() {
-  const storeId = useAdminAuthStore((s) => s.store?.id ?? '');
-
+export function useAdminProducts(_filters?: ProductFilters) {
+  // For now, filters are ignored as backend doesn't support pagination yet
+  // This structure allows future backend pagination support
   return useQuery({
-    queryKey: productKeys.count(storeId),
-    queryFn: () => productService.getCount(),
-    enabled: !!storeId,
+    queryKey: productKeys.all(),
+    queryFn: () => productService.getAll(),
+    enabled: true,
+    staleTime: 1000 * 60 * 2,
   });
 }
 
 export function useCreateProduct() {
   const queryClient = useQueryClient();
-  const storeId = useAdminAuthStore((s) => s.store?.id ?? '');
 
   return useMutation({
-    mutationFn: (data: CreateProductInput) => productService.create(data),
+    mutationFn: (data: ProductoCreateDTO) => productService.create(data),
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['products', storeId] });
+      void queryClient.invalidateQueries({ queryKey: productKeys.all() });
       toast.success('Producto creado exitosamente');
     },
     onError: (error: unknown) => {
@@ -52,13 +45,12 @@ export function useCreateProduct() {
 
 export function useUpdateProduct() {
   const queryClient = useQueryClient();
-  const storeId = useAdminAuthStore((s) => s.store?.id ?? '');
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Partial<CreateProductInput> }) =>
+    mutationFn: ({ id, data }: { id: string; data: ProductoUpdateDTO }) =>
       productService.update(id, data),
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['products', storeId] });
+      void queryClient.invalidateQueries({ queryKey: productKeys.all() });
       toast.success('Producto actualizado');
     },
     onError: (error: unknown) => {
@@ -70,12 +62,11 @@ export function useUpdateProduct() {
 
 export function useDeleteProduct() {
   const queryClient = useQueryClient();
-  const storeId = useAdminAuthStore((s) => s.store?.id ?? '');
 
   return useMutation({
     mutationFn: (id: string) => productService.delete(id),
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ['products', storeId] });
+      void queryClient.invalidateQueries({ queryKey: productKeys.all() });
       toast.success('Producto eliminado');
     },
     onError: (error: unknown) => {

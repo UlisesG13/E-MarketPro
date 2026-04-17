@@ -1,24 +1,16 @@
 ﻿import { useQuery } from '@tanstack/react-query';
 import type { Product } from '../types/common.types';
-import { products } from '../services/mockData';
+import { storeSearchService } from '@/entities/customer/services/storeSearchService';
 
-/**
- * Shared products hook — fetches products from mockData.
- * When connected to the API, this would call storeSearchService.listStores() etc.
- */
 export function useProducts() {
   const { data, isLoading, error } = useQuery<Product[]>({
-    queryKey: ['products'],
-    queryFn: async () => {
-      await new Promise((r) => setTimeout(r, 300));
-      return products as Product[];
-    },
+    queryKey: ['storefront-products'],
+    queryFn: () => storeSearchService.getStoreProducts('default'),
     staleTime: 1000 * 60 * 5,
-    initialData: products as Product[],
   });
 
   return {
-    products: data ?? (products as Product[]),
+    products: data ?? [],
     isLoading,
     error,
   };

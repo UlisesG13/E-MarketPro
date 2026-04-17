@@ -11,8 +11,24 @@ export class ApiError extends Error {
 }
 
 type RequestRole = 'admin' | 'customer' | 'public';
+type BackendTarget = 'management' | 'products';
 
-export const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:8000/api/v1';
+// In development, use proxy. In production, use full URLs
+const isDevelopment = import.meta.env.DEV;
+
+export const MANAGEMENT_BASE_URL = isDevelopment 
+  ? '/api/v1'
+  : (import.meta.env.VITE_API_URL ?? 'http://localhost:8001/api/v1');
+
+export const PRODUCTS_BASE_URL = isDevelopment
+  ? '/api'
+  : (import.meta.env.VITE_STORE_API_URL ?? 'http://54.160.129.143:8000/api/');
+
+function joinUrl(baseUrl: string, path: string): string {
+  const normalizedBase = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  return `${normalizedBase}${normalizedPath}`;
+}
 
 // ─── Access tokens — memory only (XSS-safe) ──────────────
 let adminAccessToken: string | null = null;
@@ -62,7 +78,7 @@ async function attemptRefresh(role: 'admin' | 'customer'): Promise<boolean> {
   if (!refreshToken) return false;
 
   try {
-    const response = await fetch(`${BASE_URL}/auth/refresh`, {
+    const response = await fetch(joinUrl(PRODUCTS_BASE_URL, '/auth/refresh'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ refresh_token: refreshToken }),
@@ -91,8 +107,12 @@ async function request<T>(
   method: string,
   path: string,
   body?: unknown,
-  role: RequestRole = 'public'
+  role: RequestRole = 'public',
+  backend: BackendTarget = 'management'
 ): Promise<T> {
+  const baseUrl = backend === 'products' ? PRODUCTS_BASE_URL : MANAGEMENT_BASE_URL;
+  const normalizedPath =
+    backend === 'products' && (!path || path === '/') ? '/productos' : path;
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
 
   if (role === 'admin') {
@@ -105,7 +125,7 @@ async function request<T>(
     if (token) headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${BASE_URL}${path}`, {
+  const response = await fetch(joinUrl(baseUrl, normalizedPath), {
     method,
     headers,
     body: body !== undefined ? JSON.stringify(body) : undefined,
@@ -114,7 +134,7 @@ async function request<T>(
   if (response.status === 401 && role !== 'public') {
     if (isRefreshing) {
       await new Promise<void>((resolve) => { pendingRequests.push(resolve); });
-      return request<T>(method, path, body, role);
+      return request<T>(method, path, body, role, backend);
     }
 
     isRefreshing = true;
@@ -123,7 +143,7 @@ async function request<T>(
     pendingRequests.forEach((resolve) => resolve());
     pendingRequests = [];
 
-    if (refreshed) return request<T>(method, path, body, role);
+    if (refreshed) return request<T>(method, path, body, role, backend);
 
     tokenMemory.clearAll();
     window.location.href = '/login';
@@ -148,9 +168,9 @@ async function request<T>(
 }
 
 export const apiClient = {
-  get:    <T>(path: string, role?: RequestRole) => request<T>('GET', path, undefined, role),
-  post:   <T>(path: string, body: unknown, role?: RequestRole) => request<T>('POST', path, body, role),
-  put:    <T>(path: string, body: unknown, role?: RequestRole) => request<T>('PUT', path, body, role),
-  patch:  <T>(path: string, body: unknown, role?: RequestRole) => request<T>('PATCH', path, body, role),
-  delete: <T>(path: string, role?: RequestRole) => request<T>('DELETE', path, undefined, role),
+  get:    <T>(path: string, role?: RequestRole, backend?: BackendTarget) => request<T>('GET', path, undefined, role, backend),
+  post:   <T>(path: string, body: unknown, role?: RequestRole, backend?: BackendTarget) => request<T>('POST', path, body, role, backend),
+  put:    <T>(path: string, body: unknown, role?: RequestRole, backend?: BackendTarget) => request<T>('PUT', path, body, role, backend),
+  patch:  <T>(path: string, body: unknown, role?: RequestRole, backend?: BackendTarget) => request<T>('PATCH', path, body, role, backend),
+  delete: <T>(path: string, role?: RequestRole, backend?: BackendTarget) => request<T>('DELETE', path, undefined, role, backend),
 };

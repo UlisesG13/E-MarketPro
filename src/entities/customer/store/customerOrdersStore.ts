@@ -4,6 +4,7 @@ import type { CustomerOrder } from '../types/order.types';
 import type { CartItem } from '../types/cart.types';
 import type { CustomerAddress } from '../types/customer.types';
 import { useNotificationsStore } from '../../../shared/store/notificationsStore';
+import { customerOrderService } from '../services/customerOrderService';
 
 interface PlaceOrderInput {
   items: CartItem[];
@@ -18,7 +19,9 @@ interface PlaceOrderInput {
 interface CustomerOrdersState {
   orders: CustomerOrder[];
   lastOrderId: string | null;
-  placeOrder: (input: PlaceOrderInput) => CustomerOrder;
+  isLoading: boolean;
+  fetchOrders: () => Promise<void>;
+  placeOrder: (input: PlaceOrderInput) => Promise<CustomerOrder>;
   setLastOrderId: (orderId: string | null) => void;
   getOrderById: (orderId: string) => CustomerOrder | undefined;
   clearOrders: () => void;
@@ -32,62 +35,79 @@ function buildTrackingCode() {
   return `TRK-${String(Date.now()).slice(-8)}`;
 }
 
+function resolveAddressId(address: CustomerAddress): string {
+  if (address.backendAddressId && address.backendAddressId > 0) {
+    return String(address.backendAddressId);
+  }
+  return address.id;
+}
+
 export const useCustomerOrdersStore = create<CustomerOrdersState>()(
   persist(
     (set, get) => ({
       orders: [],
       lastOrderId: null,
+      isLoading: false,
 
-      placeOrder: ({ items, shippingAddress, shippingMethod, shippingCost, paymentMethod, storeId = '', storeName = '' }) => {
-        const subtotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+      fetchOrders: async () => {
+        set({ isLoading: true });
+        try {
+          const orders = await customerOrderService.list();
+          set({ orders, isLoading: false });
+        } catch {
+          set({ isLoading: false });
+        }
+      },
 
-        const orderItems = items.map((item) => ({
-          productId: item.product.id,
-          productName: item.product.name,
-          quantity: item.quantity,
-          price: item.product.price,
-        }));
-
-        const order: CustomerOrder = {
-          id: `ORD-${String(Date.now()).slice(-8)}`,
-          customerName: shippingAddress.recipient,
-          customerEmail: '',
-          items: orderItems,
-          total: subtotal + shippingCost,
-          status: 'processing',
-          date: new Date().toISOString(),
-          shippingAddress: buildAddressLabel(shippingAddress),
+      placeOrder: async ({ items, shippingAddress, shippingMethod, shippingCost, paymentMethod, storeId = '', storeName = '' }) => {
+        const createdOrder = await customerOrderService.create({
+          items,
+          shippingAddressId: resolveAddressId(shippingAddress),
+          shippingMethod,
+          shippingCost,
           paymentMethod,
           storeId,
           storeName,
-          shippingMethod,
+        });
+
+        const mergedOrder: CustomerOrder = {
+          ...createdOrder,
+          shippingAddress: createdOrder.shippingAddress || buildAddressLabel(shippingAddress),
+          paymentMethod: paymentMethod || createdOrder.paymentMethod,
+          shippingMethod: shippingMethod || createdOrder.shippingMethod,
           shippingCost,
-          trackingCode: buildTrackingCode(),
+          trackingCode: createdOrder.trackingCode ?? buildTrackingCode(),
         };
 
         set({
-          orders: [order, ...get().orders],
-          lastOrderId: order.id,
+          orders: [mergedOrder, ...get().orders],
+          lastOrderId: mergedOrder.id,
         });
 
         useNotificationsStore.getState().pushNotification({
-          id: `notif-order-${order.id}`,
+          id: `notif-order-${mergedOrder.id}`,
           title: 'Pedido confirmado',
-          description: `${order.id} fue registrado correctamente.`,
+          description: `${mergedOrder.id} fue registrado correctamente.`,
           time: 'Ahora',
           href: '/account/orders',
           kind: 'order',
         });
 
-        return order;
+        return mergedOrder;
       },
 
       setLastOrderId: (orderId) => set({ lastOrderId: orderId }),
 
       getOrderById: (orderId) => get().orders.find((o) => o.id === orderId),
 
-      clearOrders: () => set({ orders: [], lastOrderId: null }),
+      clearOrders: () => set({ orders: [], lastOrderId: null, isLoading: false }),
     }),
-    { name: 'emarketpro-customer-orders' }
+    {
+      name: 'emarketpro-customer-orders',
+      partialize: (state) => ({
+        orders: state.orders,
+        lastOrderId: state.lastOrderId,
+      }),
+    }
   )
 );

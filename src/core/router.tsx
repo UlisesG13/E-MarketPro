@@ -48,7 +48,6 @@ const ComparisonPage = lazy(() => import('../shared/components/pages/ComparisonP
 const DashboardPage = lazy(() => import('../entities/admin/components/pages/DashboardPage'));
 const ProductsPage = lazy(() => import('../entities/admin/components/pages/ProductsPage'));
 const OrdersPage = lazy(() => import('../entities/admin/components/pages/OrdersPage'));
-const FinancialPage = lazy(() => import('../entities/admin/components/pages/FinancialPage'));
 const SettingsPage = lazy(() => import('../entities/admin/components/pages/SettingsPage'));
 const CheckoutPage = lazy(() => import('../entities/admin/components/pages/CheckoutPage'));
 
@@ -159,7 +158,7 @@ export const router = createBrowserRouter([
       { path: '/dashboard', element: <SuspenseWrapper><DashboardPage /></SuspenseWrapper> },
       { path: '/products', element: <SuspenseWrapper><ProductsPage /></SuspenseWrapper> },
       { path: '/orders', element: <SuspenseWrapper><OrdersPage /></SuspenseWrapper> },
-      { path: '/financial', element: <SuspenseWrapper><FinancialPage /></SuspenseWrapper> },
+      { path: '/financial', element: <Navigate to="/settings" replace /> },
       { path: '/settings', element: <SuspenseWrapper><SettingsPage /></SuspenseWrapper> },
       { path: '/checkout/:planId', element: <SuspenseWrapper><CheckoutPage /></SuspenseWrapper> },
     ],

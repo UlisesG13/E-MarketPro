@@ -40,10 +40,10 @@ const INITIAL_NOTIFICATIONS: AppNotification[] = [
   },
   {
     id: 'notif-4',
-    title: 'Comparativa financiera actualizada',
-    description: 'Ya puedes revisar el análisis financiero y el punto de equilibrio.',
+    title: 'Información del plan disponible',
+    description: 'Consulta el resumen de tu paquete y los datos de facturación en configuración.',
     time: 'Hoy',
-    href: '/financial',
+    href: '/settings',
     read: true,
     kind: 'insight',
   },

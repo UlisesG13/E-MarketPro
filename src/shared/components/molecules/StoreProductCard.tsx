@@ -37,6 +37,9 @@ const StoreProductCard = React.memo<StoreProductCardProps>(function StoreProduct
     );
   };
 
+  const hasImage = Boolean(product.image?.trim());
+  const hasLimitedStock = typeof product.stock === 'number' && product.stock > 0;
+
   return (
     <motion.article
       initial={{ opacity: 0, y: 18 }}
@@ -49,12 +52,18 @@ const StoreProductCard = React.memo<StoreProductCardProps>(function StoreProduct
     >
       <div className="relative aspect-[4/4.2] overflow-hidden bg-white/5">
         <Link to={`/store/product/${product.id}`} className="absolute inset-0 z-10" aria-label={product.name} />
-        <img
-          src={product.image}
-          alt={product.name}
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-          loading="lazy"
-        />
+        {hasImage ? (
+          <img
+            src={product.image}
+            alt={product.name}
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            loading="lazy"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center text-xs text-gray-500">
+            Sin imagen
+          </div>
+        )}
         <div className="absolute left-4 top-4 z-20">
           <Link to={`/category/${slugifyCategory(product.category)}`}>
             <Badge variant="info">{product.category}</Badge>
@@ -105,7 +114,7 @@ const StoreProductCard = React.memo<StoreProductCardProps>(function StoreProduct
 
         <div className="flex items-center justify-between text-xs text-gray-400">
           <span>SKU {product.sku}</span>
-          <span>{product.stock > 0 ? `${product.stock} disponibles` : 'Sin stock'}</span>
+          <span>{hasLimitedStock ? `${product.stock} disponibles` : 'Stock ilimitado'}</span>
         </div>
 
         <div className="flex gap-3">
@@ -118,7 +127,6 @@ const StoreProductCard = React.memo<StoreProductCardProps>(function StoreProduct
           <Button
             className="flex-1"
             icon={<ShoppingCart className="h-4 w-4" />}
-            disabled={product.stock <= 0}
             onClick={handleAddToCart}
           >
             Agregar

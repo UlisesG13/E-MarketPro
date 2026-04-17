@@ -5,12 +5,14 @@ export function useCart() {
   const store = useCartStore();
 
   return {
+    cartId: store.cartId,
     items: store.items,
-    addItem: (product: Product, quantity?: number, storeId?: string, storeName?: string) =>
-      store.addItem(product, quantity, storeId, storeName),
+    addItem: (product: Product, quantity?: number, storeId?: string, storeName?: string, colorId?: number, tallaId?: number) =>
+      store.addItem(product, quantity, storeId, storeName, colorId, tallaId),
     removeItem: store.removeItem,
     updateQuantity: store.updateQuantity,
     clearCart: store.clearCart,
+    syncWithServer: store.syncWithServer,
     total: store.total(),
     itemCount: store.itemCount(),
     hasItem: store.hasItem,

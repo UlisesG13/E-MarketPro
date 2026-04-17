@@ -1,4 +1,4 @@
-﻿import React from 'react';
+﻿import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, Minus, Plus, ShoppingCart, Trash2 } from 'lucide-react';
 import { useCartStore } from '../../../../entities/customer/store/cartStore';
@@ -9,11 +9,16 @@ import EmptyState from '../../../../shared/components/molecules/EmptyState';
 const CartPage: React.FC = () => {
   const navigate = useNavigate();
   const items = useCartStore((state) => state.items);
+  const syncWithServer = useCartStore((state) => state.syncWithServer);
   const updateQuantity = useCartStore((state) => state.updateQuantity);
   const removeItem = useCartStore((state) => state.removeItem);
   const subtotal = useCartStore((state) => state.total());
   const shippingEstimate = subtotal > 1999 ? 0 : 149;
   const total = subtotal + shippingEstimate;
+
+  useEffect(() => {
+    void syncWithServer();
+  }, [syncWithServer]);
 
   if (items.length === 0) {
     return (

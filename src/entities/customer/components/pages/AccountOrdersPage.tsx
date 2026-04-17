@@ -1,10 +1,11 @@
-﻿import React from 'react';
+﻿import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { PackageCheck } from 'lucide-react';
 import { useCustomerOrdersStore } from '../../../../entities/customer/store/customerOrdersStore';
 import { formatCurrency, formatDate } from '../../../../shared/utils/format';
 import Badge from '../../../../shared/components/atoms/Badge';
 import EmptyState from '../../../../shared/components/molecules/EmptyState';
+import Spinner from '../../../../shared/components/atoms/Spinner';
 
 const statusVariant = {
   pending: 'warning',
@@ -24,6 +25,20 @@ const statusLabel = {
 
 const AccountOrdersPage: React.FC = () => {
   const orders = useCustomerOrdersStore((state) => state.orders);
+  const isLoading = useCustomerOrdersStore((state) => state.isLoading);
+  const fetchOrders = useCustomerOrdersStore((state) => state.fetchOrders);
+
+  useEffect(() => {
+    void fetchOrders();
+  }, [fetchOrders]);
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <Spinner size="lg" />
+      </div>
+    );
+  }
 
   if (orders.length === 0) {
     return (

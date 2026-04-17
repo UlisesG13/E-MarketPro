@@ -5,7 +5,6 @@ import { cn } from '../../utils/cn';
 import { useUIStore } from '../../store/uiStore';
 import {
   LayoutDashboard,
-  LineChart,
   Package,
   ShoppingCart,
   Settings,
@@ -15,7 +14,6 @@ import {
 
 const navItems = [
   { to: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-  { to: '/financial', icon: LineChart, label: 'Finanzas' },
   { to: '/products', icon: Package, label: 'Productos' },
   { to: '/orders', icon: ShoppingCart, label: 'Órdenes' },
   { to: '/settings', icon: Settings, label: 'Configuración' },

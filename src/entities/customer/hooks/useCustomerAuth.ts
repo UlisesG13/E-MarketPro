@@ -4,6 +4,7 @@ import { toast } from 'sonner';
 import { useCustomerAuthStore } from '../store/customerAuthStore';
 import { customerAuthService } from '../services/customerAuthService';
 import type { CustomerLoginInput, CustomerRegisterInput } from '../services/customerAuthService';
+import type { LoginResponseDTO } from '@/shared/services/authService';
 import { ApiError } from '@/shared/services/apiClient';
 
 export function useCustomerAuth() {
@@ -12,9 +13,18 @@ export function useCustomerAuth() {
 
   const loginMutation = useMutation({
     mutationFn: (data: CustomerLoginInput) => customerAuthService.login(data),
-    onSuccess: (response) => {
-      setAuth(response.customer, response.access_token, response.refresh_token);
-      toast.success(`Bienvenido, ${response.customer.name}`);
+    onSuccess: (response: LoginResponseDTO) => {
+      // Map backend response to customer store structure
+      const customerData = {
+        id: response.usuario_id,
+        email: response.email,
+        name: response.email.split('@')[0], // fallback name from email
+        phone: null,
+        avatar: null,
+      };
+      const refreshToken = response.refresh_token || '';
+      setAuth(customerData, response.token, refreshToken);
+      toast.success(`Bienvenido, ${response.email}`);
       navigate('/store');
     },
     onError: (error: unknown) => {
@@ -25,8 +35,17 @@ export function useCustomerAuth() {
 
   const registerMutation = useMutation({
     mutationFn: (data: CustomerRegisterInput) => customerAuthService.register(data),
-    onSuccess: (response) => {
-      setAuth(response.customer, response.access_token, response.refresh_token);
+    onSuccess: (response: LoginResponseDTO) => {
+      // Map backend response to customer store structure
+      const customerData = {
+        id: response.usuario_id,
+        email: response.email,
+        name: response.email.split('@')[0],
+        phone: null,
+        avatar: null,
+      };
+      const refreshToken = response.refresh_token || '';
+      setAuth(customerData, response.token, refreshToken);
       toast.success('Cuenta creada exitosamente');
       navigate('/store');
     },
@@ -52,5 +71,7 @@ export function useCustomerAuth() {
     logout,
     isLoggingIn: loginMutation.isPending,
     isRegistering: registerMutation.isPending,
+    loginError: loginMutation.error,
+    registerError: registerMutation.error,
   };
 }

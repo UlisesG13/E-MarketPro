@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BellRing, MapPinned, Plus, Settings2, UserRound } from 'lucide-react';
 import { toast } from 'sonner';
@@ -11,6 +11,8 @@ const AccountPage: React.FC = () => {
   const profile = useCustomerStore((state) => state.profile);
   const addresses = useCustomerStore((state) => state.addresses);
   const preferences = useCustomerStore((state) => state.preferences);
+  const fetchAddresses = useCustomerStore((state) => state.fetchAddresses);
+  const isLoadingAddresses = useCustomerStore((state) => state.isLoadingAddresses);
   const updateProfile = useCustomerStore((state) => state.updateProfile);
   const savePreferences = useCustomerStore((state) => state.savePreferences);
   const addAddress = useCustomerStore((state) => state.addAddress);
@@ -23,38 +25,70 @@ const AccountPage: React.FC = () => {
     recipient: '',
     phone: '',
     street: '',
+    numeroCasa: 1,
+    colonia: '',
+    calleUno: '',
+    calleDos: '',
     city: '',
     state: '',
     zipCode: '',
     references: '',
     isDefault: addresses.length === 0,
   });
+  const [editingAddressId, setEditingAddressId] = useState<string | null>(null);
+  const [editAddressForm, setEditAddressForm] = useState({
+    label: '',
+    recipient: '',
+    phone: '',
+    street: '',
+    numeroCasa: 1,
+    colonia: '',
+    calleUno: '',
+    calleDos: '',
+    city: '',
+    state: '',
+    zipCode: '',
+    references: '',
+    isDefault: false,
+  });
+
+  useEffect(() => {
+    void fetchAddresses();
+  }, [fetchAddresses]);
 
   const handleSaveProfile = () => {
     updateProfile(profileForm);
     toast.success('Datos personales actualizados');
   };
 
-  const handleAddAddress = () => {
+  const handleAddAddress = async () => {
     if (
       !addressForm.label.trim() ||
       !addressForm.recipient.trim() ||
       !addressForm.phone.trim() ||
       !addressForm.street.trim() ||
-      !addressForm.city.trim() ||
-      !addressForm.state.trim() ||
+      !(addressForm.colonia ?? '').trim() ||
+      Number(addressForm.numeroCasa ?? 0) <= 0 ||
       !addressForm.zipCode.trim()
     ) {
       toast.error('Completa los datos de la dirección');
       return;
     }
 
-    addAddress(addressForm);
+    const created = await addAddress(addressForm);
+    if (!created) {
+      toast.error('No se pudo guardar la dirección');
+      return;
+    }
     setAddressForm({
       label: '',
       recipient: '',
       phone: '',
       street: '',
+      numeroCasa: 1,
+      colonia: '',
+      calleUno: '',
+      calleDos: '',
       city: '',
       state: '',
       zipCode: '',
@@ -62,6 +96,68 @@ const AccountPage: React.FC = () => {
       isDefault: false,
     });
     toast.success('Dirección agregada');
+  };
+
+  const handleStartEditAddress = (address: typeof addresses[number]) => {
+    setEditingAddressId(address.id);
+    setEditAddressForm({
+      label: address.label,
+      recipient: address.recipient,
+      phone: address.phone,
+      street: address.street,
+      numeroCasa: address.numeroCasa ?? 1,
+      colonia: address.colonia ?? '',
+      calleUno: address.calleUno ?? '',
+      calleDos: address.calleDos ?? '',
+      city: address.city,
+      state: address.state,
+      zipCode: address.zipCode,
+      references: address.references ?? '',
+      isDefault: Boolean(address.isDefault),
+    });
+  };
+
+  const handleCancelEditAddress = () => {
+    setEditingAddressId(null);
+    setEditAddressForm({
+      label: '',
+      recipient: '',
+      phone: '',
+      street: '',
+      numeroCasa: 1,
+      colonia: '',
+      calleUno: '',
+      calleDos: '',
+      city: '',
+      state: '',
+      zipCode: '',
+      references: '',
+      isDefault: false,
+    });
+  };
+
+  const handleSaveEditAddress = async () => {
+    if (!editingAddressId) return;
+
+    if (
+      !editAddressForm.label.trim() ||
+      !editAddressForm.recipient.trim() ||
+      !editAddressForm.phone.trim() ||
+      !editAddressForm.street.trim() ||
+      !(editAddressForm.colonia ?? '').trim() ||
+      Number(editAddressForm.numeroCasa ?? 0) <= 0 ||
+      !editAddressForm.zipCode.trim()
+    ) {
+      toast.error('Completa los datos de la dirección');
+      return;
+    }
+
+    await updateAddress(editingAddressId, {
+      ...editAddressForm,
+      city: editAddressForm.colonia,
+    });
+    toast.success('Dirección actualizada');
+    handleCancelEditAddress();
   };
 
   return (
@@ -241,6 +337,10 @@ const AccountPage: React.FC = () => {
 
         <div className="grid gap-4 xl:grid-cols-[1fr_360px]">
           <div className="grid gap-4">
+            {isLoadingAddresses ? (
+              <p className="text-sm text-[var(--app-text-muted)]">Cargando direcciones...</p>
+            ) : null}
+
             {addresses.map((address) => (
               <article
                 key={address.id}
@@ -254,7 +354,7 @@ const AccountPage: React.FC = () => {
                     </div>
                     <p className="mt-2 text-sm text-[var(--app-text)]">{address.recipient}</p>
                     <p className="text-sm text-[var(--app-text-muted)]">
-                      {address.street}, {address.city}, {address.state}, {address.zipCode}
+                      ID {address.backendAddressId ?? address.id} · {address.street} {address.numeroCasa ?? ''}, {address.colonia ?? address.city}, CP {address.zipCode}
                     </p>
                     <p className="text-sm text-[var(--app-text-soft)]">{address.phone}</p>
                   </div>
@@ -263,7 +363,10 @@ const AccountPage: React.FC = () => {
                     {!address.isDefault && (
                       <button
                         type="button"
-                        onClick={() => updateAddress(address.id, { isDefault: true })}
+                        onClick={async () => {
+                          await updateAddress(address.id, { isDefault: true });
+                          toast.success('Dirección principal actualizada');
+                        }}
                         className="rounded-xl border border-[var(--app-border)] px-3 py-2 text-sm text-[var(--app-text-muted)] transition-colors hover:bg-[var(--app-surface-soft)] hover:text-[var(--app-text)]"
                       >
                         Hacer principal
@@ -271,7 +374,17 @@ const AccountPage: React.FC = () => {
                     )}
                     <button
                       type="button"
-                      onClick={() => removeAddress(address.id)}
+                      onClick={() => handleStartEditAddress(address)}
+                      className="rounded-xl border border-[var(--app-border)] px-3 py-2 text-sm text-[var(--app-text-muted)] transition-colors hover:bg-[var(--app-surface-soft)] hover:text-[var(--app-text)]"
+                    >
+                      Editar
+                    </button>
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        await removeAddress(address.id);
+                        toast.success('Dirección eliminada');
+                      }}
                       className="rounded-xl border border-red-500/20 bg-red-500/10 px-3 py-2 text-sm text-red-300 transition-colors hover:bg-red-500/20"
                     >
                       Eliminar
@@ -285,75 +398,133 @@ const AccountPage: React.FC = () => {
           <div className="rounded-2xl border border-[var(--app-border)] bg-[var(--app-surface-soft)] p-5">
             <div className="mb-4 flex items-center gap-2">
               <Plus className="h-4 w-4 text-[var(--app-primary)]" />
-              <p className="font-semibold text-[var(--app-text)]">Agregar dirección</p>
+              <p className="font-semibold text-[var(--app-text)]">
+                {editingAddressId ? 'Editar dirección' : 'Agregar dirección'}
+              </p>
             </div>
             <div className="grid gap-3">
               <Input
                 label="Etiqueta"
-                value={addressForm.label}
+                value={editingAddressId ? editAddressForm.label : addressForm.label}
                 onChange={(event) =>
-                  setAddressForm((current) => ({ ...current, label: event.target.value }))
+                  editingAddressId
+                    ? setEditAddressForm((current) => ({ ...current, label: event.target.value }))
+                    : setAddressForm((current) => ({ ...current, label: event.target.value }))
                 }
               />
               <Input
                 label="Persona que recibe"
-                value={addressForm.recipient}
+                value={editingAddressId ? editAddressForm.recipient : addressForm.recipient}
                 onChange={(event) =>
-                  setAddressForm((current) => ({ ...current, recipient: event.target.value }))
+                  editingAddressId
+                    ? setEditAddressForm((current) => ({ ...current, recipient: event.target.value }))
+                    : setAddressForm((current) => ({ ...current, recipient: event.target.value }))
                 }
               />
               <Input
                 label="Teléfono"
-                value={addressForm.phone}
+                value={editingAddressId ? editAddressForm.phone : addressForm.phone}
                 onChange={(event) =>
-                  setAddressForm((current) => ({ ...current, phone: event.target.value }))
+                  editingAddressId
+                    ? setEditAddressForm((current) => ({ ...current, phone: event.target.value }))
+                    : setAddressForm((current) => ({ ...current, phone: event.target.value }))
                 }
               />
               <Input
-                label="Calle y número"
-                value={addressForm.street}
+                label="Calle"
+                value={editingAddressId ? editAddressForm.street : addressForm.street}
                 onChange={(event) =>
-                  setAddressForm((current) => ({ ...current, street: event.target.value }))
+                  editingAddressId
+                    ? setEditAddressForm((current) => ({ ...current, street: event.target.value }))
+                    : setAddressForm((current) => ({ ...current, street: event.target.value }))
                 }
               />
               <div className="grid grid-cols-2 gap-3">
                 <Input
-                  label="Ciudad"
-                  value={addressForm.city}
+                  label="Número de casa"
+                  type="number"
+                  value={String(editingAddressId ? editAddressForm.numeroCasa ?? 1 : addressForm.numeroCasa ?? 1)}
                   onChange={(event) =>
-                    setAddressForm((current) => ({ ...current, city: event.target.value }))
+                    editingAddressId
+                      ? setEditAddressForm((current) => ({ ...current, numeroCasa: Number(event.target.value) }))
+                      : setAddressForm((current) => ({ ...current, numeroCasa: Number(event.target.value) }))
                   }
                 />
                 <Input
-                  label="Estado"
-                  value={addressForm.state}
+                  label="Colonia"
+                  value={editingAddressId ? editAddressForm.colonia ?? '' : addressForm.colonia ?? ''}
                   onChange={(event) =>
-                    setAddressForm((current) => ({ ...current, state: event.target.value }))
+                    editingAddressId
+                      ? setEditAddressForm((current) => ({ ...current, colonia: event.target.value, city: event.target.value }))
+                      : setAddressForm((current) => ({ ...current, colonia: event.target.value, city: event.target.value }))
                   }
                 />
               </div>
               <Input
-                label="Código postal"
-                value={addressForm.zipCode}
+                label="Calle uno (opcional)"
+                value={editingAddressId ? editAddressForm.calleUno ?? '' : addressForm.calleUno ?? ''}
                 onChange={(event) =>
-                  setAddressForm((current) => ({ ...current, zipCode: event.target.value }))
+                  editingAddressId
+                    ? setEditAddressForm((current) => ({ ...current, calleUno: event.target.value }))
+                    : setAddressForm((current) => ({ ...current, calleUno: event.target.value }))
+                }
+              />
+              <Input
+                label="Calle dos (opcional)"
+                value={editingAddressId ? editAddressForm.calleDos ?? '' : addressForm.calleDos ?? ''}
+                onChange={(event) =>
+                  editingAddressId
+                    ? setEditAddressForm((current) => ({ ...current, calleDos: event.target.value }))
+                    : setAddressForm((current) => ({ ...current, calleDos: event.target.value }))
+                }
+              />
+              <Input
+                label="Código postal"
+                value={editingAddressId ? editAddressForm.zipCode : addressForm.zipCode}
+                onChange={(event) =>
+                  editingAddressId
+                    ? setEditAddressForm((current) => ({ ...current, zipCode: event.target.value }))
+                    : setAddressForm((current) => ({ ...current, zipCode: event.target.value }))
+                }
+              />
+              <Input
+                label="Referencia (opcional)"
+                value={editingAddressId ? editAddressForm.references ?? '' : addressForm.references ?? ''}
+                onChange={(event) =>
+                  editingAddressId
+                    ? setEditAddressForm((current) => ({ ...current, references: event.target.value }))
+                    : setAddressForm((current) => ({ ...current, references: event.target.value }))
                 }
               />
               <label className="flex items-center gap-2 text-sm text-gray-300">
                 <input
                   type="checkbox"
-                  checked={addressForm.isDefault}
+                  checked={editingAddressId ? editAddressForm.isDefault : addressForm.isDefault}
                   onChange={(event) =>
-                    setAddressForm((current) => ({
-                      ...current,
-                      isDefault: event.target.checked,
-                    }))
+                    editingAddressId
+                      ? setEditAddressForm((current) => ({
+                        ...current,
+                        isDefault: event.target.checked,
+                      }))
+                      : setAddressForm((current) => ({
+                        ...current,
+                        isDefault: event.target.checked,
+                      }))
                   }
                   className="h-4 w-4 rounded border-[var(--app-border)] bg-[var(--app-surface-soft)] text-[var(--app-primary)]"
                 />
                 Guardar como dirección principal
               </label>
-              <Button onClick={handleAddAddress}>Guardar dirección</Button>
+              <div className="flex gap-2">
+                <Button onClick={editingAddressId ? handleSaveEditAddress : handleAddAddress}>
+                  {editingAddressId ? 'Guardar cambios' : 'Guardar dirección'}
+                </Button>
+                {editingAddressId ? (
+                  <Button variant="ghost" onClick={handleCancelEditAddress}>
+                    Cancelar
+                  </Button>
+                ) : null}
+              </div>
             </div>
           </div>
         </div>

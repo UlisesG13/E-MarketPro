@@ -83,18 +83,15 @@ const RegisterPage: React.FC = () => {
 
     if (mode === 'admin') {
       adminRegister({
-        name: name.trim(),
+        nombre: name.trim(),
         email: email.trim(),
         password,
-        store_name: storeName.trim(),
-        store_slug: storeSlug.trim(),
       });
     } else {
       customerRegister({
-        name: name.trim(),
+        nombre: name.trim(),
         email: email.trim(),
         password,
-        phone: phone.trim() || undefined,
       });
     }
   };

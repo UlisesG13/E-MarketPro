@@ -20,6 +20,7 @@ export interface CustomerProfile {
 
 export interface CustomerAddress {
   id: string;
+  backendAddressId?: number;
   label: string;
   recipient: string;
   phone: string;
@@ -27,6 +28,10 @@ export interface CustomerAddress {
   city: string;
   state: string;
   zipCode: string;
+  numeroCasa?: number;
+  colonia?: string;
+  calleUno?: string;
+  calleDos?: string;
   references?: string;
   isDefault?: boolean;
 }

@@ -9,7 +9,6 @@ export const ADMIN_ROUTES = {
   DASHBOARD: '/dashboard',
   PRODUCTS: '/products',
   ORDERS: '/orders',
-  FINANCIAL: '/financial',
   SETTINGS: '/settings',
   CHECKOUT: (planId: string) => `/checkout/${planId}`,
 } as const;

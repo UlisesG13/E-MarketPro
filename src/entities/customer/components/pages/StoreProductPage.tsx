@@ -16,12 +16,12 @@ import type { Product } from '../../../../shared/types/common.types';
 const StoreProductPage: React.FC = () => {
   const { id = '' } = useParams();
   const { products, isLoading } = useProducts();
+  const product = useMemo(() => products.find((p) => p.id === id) ?? null, [products, id]);
+  const hasLimitedStock = typeof product?.stock === 'number' && product.stock > 0;
   const addItem = useCartStore((state) => state.addItem);
   const toggleFavorite = useFavoritesStore((state) => state.toggleFavorite);
   const isFavorite = useFavoritesStore((state) => state.hasFavorite(id));
   const [quantity, setQuantity] = useState(1);
-
-  const product = useMemo(() => products.find((p) => p.id === id) ?? null, [products, id]);
 
   const relatedProducts = useMemo(() => {
     if (!products || !product) return [];
@@ -41,9 +41,10 @@ const StoreProductPage: React.FC = () => {
   if (!product) return <Navigate to="/store" replace />;
 
   const handleAddToCart = () => {
-    for (let i = 0; i < quantity; i++) {
-      addItem(product as unknown as import('../../../../entities/customer/types/product.types').Product);
-    }
+    void addItem(
+      product as unknown as import('../../../../entities/customer/types/product.types').Product,
+      quantity
+    );
     toast.success(`${product.name} se agregó al carrito`);
   };
 
@@ -98,7 +99,7 @@ const StoreProductPage: React.FC = () => {
                   <span className="text-xs text-gray-500">({product.reviews} reseñas)</span>
                 </div>
                 <Badge variant={product.stock > 0 ? 'success' : 'danger'}>
-                  {product.stock > 0 ? `${product.stock} disponibles` : 'Sin stock'}
+                  {hasLimitedStock ? `${product.stock} disponibles` : 'Stock ilimitado'}
                 </Badge>
               </div>
             </div>
@@ -126,7 +127,9 @@ const StoreProductPage: React.FC = () => {
                 <span className="w-8 text-center font-medium text-white">{quantity}</span>
                 <button
                   type="button"
-                  onClick={() => setQuantity((q) => Math.min(product.stock, q + 1))}
+                  onClick={() =>
+                    setQuantity((q) => (hasLimitedStock ? Math.min(product.stock, q + 1) : q + 1))
+                  }
                   className="text-gray-400 hover:text-white transition-colors"
                 >
                   <Plus className="h-4 w-4" />
@@ -138,7 +141,6 @@ const StoreProductPage: React.FC = () => {
               <Button
                 className="flex-1"
                 icon={<ShoppingCart className="h-4 w-4" />}
-                disabled={product.stock <= 0}
                 onClick={handleAddToCart}
               >
                 Agregar al carrito

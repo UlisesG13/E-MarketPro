@@ -1,32 +1,31 @@
-import { apiClient, getRefreshToken } from '@/shared/services/apiClient';
+import { authService, type UserLoginInput, type UserRegisterInput, type LoginResponseDTO } from '@/shared/services/authService';
 
-export interface CustomerRegisterInput {
-  email: string;
-  password: string;
-  name: string;
-  phone?: string;
-}
+export interface CustomerRegisterInput extends UserRegisterInput {}
 
-export interface CustomerLoginInput {
-  email: string;
-  password: string;
-}
-
-interface CustomerAuthResponse {
-  access_token: string;
-  refresh_token: string;
-  token_type: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  customer: any;
-}
+export interface CustomerLoginInput extends UserLoginInput {}
 
 export const customerAuthService = {
-  register: (data: CustomerRegisterInput) =>
-    apiClient.post<CustomerAuthResponse>('/auth/customer/register', data),
+  /**
+   * POST /auth/register — register customer user (delegated to authService, uses products backend)
+   */
+  register: (data: CustomerRegisterInput): Promise<LoginResponseDTO> =>
+    authService.register(data),
 
-  login: (data: CustomerLoginInput) =>
-    apiClient.post<CustomerAuthResponse>('/auth/customer/login', data),
+  /**
+   * POST /auth/login — login customer user
+   */
+  login: (data: CustomerLoginInput): Promise<LoginResponseDTO> =>
+    authService.login(data),
 
-  logout: () =>
-    apiClient.post<void>('/auth/logout', { refresh_token: getRefreshToken('customer') ?? '' }, 'customer'),
+  /**
+   * GET /auth/me — get current customer info
+   */
+  getCurrentUser: (): Promise<{ usuario_id: string; email: string; rol: string }> =>
+    authService.getCurrentUser('customer'),
+
+  /**
+   * POST /auth/logout — logout customer
+   */
+  logout: (): Promise<void> =>
+    authService.logout('customer'),
 };

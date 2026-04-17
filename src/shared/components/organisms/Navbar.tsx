@@ -17,9 +17,7 @@ const Navbar: React.FC = () => {
   const pageLabel =
     location.pathname === '/dashboard'
       ? 'Resumen general'
-      : location.pathname === '/financial'
-        ? 'Análisis financiero'
-        : location.pathname === '/products'
+      : location.pathname === '/products'
           ? 'Gestión de catálogo'
           : location.pathname === '/orders'
             ? 'Seguimiento de pedidos'

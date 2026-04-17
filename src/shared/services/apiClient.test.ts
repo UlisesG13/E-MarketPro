@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
-import { apiClient, ApiError } from './apiClient';
-import { tokenStorage } from '../utils/tokenStorage';
+import { apiClient, ApiError, tokenMemory } from './apiClient';
 
 // Mock fetch globally
 const mockFetch = vi.fn();
@@ -17,7 +16,7 @@ function mockResponse(body: unknown, status = 200) {
 
 beforeEach(() => {
   mockFetch.mockReset();
-  tokenStorage.clearAll();
+  tokenMemory.clearAll();
   localStorage.clear();
 });
 
@@ -27,7 +26,7 @@ afterEach(() => {
 
 describe('apiClient — Authorization header', () => {
   it('adds Bearer token when role is admin and token exists', async () => {
-    tokenStorage.setAccessToken('admin-tok');
+    tokenMemory.setAdminToken('admin-tok');
     mockFetch.mockReturnValue(mockResponse({ ok: true }));
 
     await apiClient.get('/test', 'admin');
@@ -37,7 +36,7 @@ describe('apiClient — Authorization header', () => {
   });
 
   it('does not add Authorization for public requests', async () => {
-    tokenStorage.setAccessToken('some-token');
+    tokenMemory.setAdminToken('some-token');
     mockFetch.mockReturnValue(mockResponse([]));
 
     await apiClient.get('/public', 'public');
@@ -53,7 +52,7 @@ describe('apiClient — X-Store-ID header', () => {
       'emarketpro-admin-auth',
       JSON.stringify({ state: { store: { id: 'store-99' } } })
     );
-    tokenStorage.setAccessToken('tok');
+    tokenMemory.setAdminToken('tok');
     mockFetch.mockReturnValue(mockResponse({}));
 
     await apiClient.get('/admin/products', 'admin');

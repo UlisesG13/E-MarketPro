@@ -31,6 +31,10 @@ const emptyAddress: Omit<CustomerAddress, 'id'> = {
   recipient: '',
   phone: '',
   street: '',
+  numeroCasa: 1,
+  colonia: '',
+  calleUno: '',
+  calleDos: '',
   city: '',
   state: '',
   zipCode: '',
@@ -38,13 +42,25 @@ const emptyAddress: Omit<CustomerAddress, 'id'> = {
   isDefault: false,
 };
 
+function resolveBackendAddressId(address: CustomerAddress | undefined): number | null {
+  if (!address) return null;
+  if (address.backendAddressId && address.backendAddressId > 0) {
+    return address.backendAddressId;
+  }
+  const parsed = Number(address.id);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+}
+
 const StoreCheckoutPage: React.FC = () => {
   const navigate = useNavigate();
   const items = useCartStore((state) => state.items);
+  const syncWithServer = useCartStore((state) => state.syncWithServer);
   const clearCart = useCartStore((state) => state.clearCart);
   const subtotal = useCartStore((state) => state.total());
   const profile = useCustomerProfileStore((state) => state.profile);
   const addresses = useCustomerProfileStore((state) => state.addresses);
+  const fetchAddresses = useCustomerProfileStore((state) => state.fetchAddresses);
+  const isLoadingAddresses = useCustomerProfileStore((state) => state.isLoadingAddresses);
   const updateProfile = useCustomerProfileStore((state) => state.updateProfile);
   const addAddress = useCustomerProfileStore((state) => state.addAddress);
   const placeOrder = useCustomerOrdersStore((state) => state.placeOrder);
@@ -64,6 +80,24 @@ const StoreCheckoutPage: React.FC = () => {
     cvc: '',
   });
   const [submitting, setSubmitting] = useState(false);
+
+  React.useEffect(() => {
+    void syncWithServer();
+    void fetchAddresses();
+  }, [fetchAddresses, syncWithServer]);
+
+  React.useEffect(() => {
+    if (createNewAddress) return;
+    if (addresses.length === 0) {
+      setSelectedAddressId('');
+      return;
+    }
+
+    const exists = addresses.some((address) => address.id === selectedAddressId);
+    if (!exists) {
+      setSelectedAddressId(addresses.find((address) => address.isDefault)?.id ?? addresses[0].id);
+    }
+  }, [addresses, createNewAddress, selectedAddressId]);
 
   const shippingMethod =
     shippingOptions.find((option) => option.id === shippingMethodId) ?? shippingOptions[0];
@@ -104,8 +138,8 @@ const StoreCheckoutPage: React.FC = () => {
     addressForm.recipient.trim() &&
     addressForm.phone.trim() &&
     addressForm.street.trim() &&
-    addressForm.city.trim() &&
-    addressForm.state.trim() &&
+    (addressForm.colonia ?? '').trim() &&
+    Number(addressForm.numeroCasa ?? 0) > 0 &&
     addressForm.zipCode.trim();
   const isExistingAddressValid = Boolean(selectedAddressId);
   const isPaymentValid =
@@ -137,24 +171,56 @@ const StoreCheckoutPage: React.FC = () => {
 
     if (!selectedAddress) return;
 
+    let orderAddress = selectedAddress;
+    if (createNewAddress) {
+      const created = await addAddress({ ...addressForm, isDefault: addresses.length === 0 });
+      if (!created) {
+        toast.error('No se pudo crear la dirección para el pedido.');
+        return;
+      }
+      orderAddress = created;
+      setSelectedAddressId(created.id);
+      setCreateNewAddress(false);
+    } else if (!resolveBackendAddressId(orderAddress as CustomerAddress)) {
+      // Legacy addresses from local persisted state may not have a backend numeric ID.
+      // Persist them first so `POST /pedidos` always receives a valid `direccion_id`.
+      const migrated = await addAddress({
+        ...(orderAddress as CustomerAddress),
+        isDefault: (orderAddress as CustomerAddress).isDefault ?? addresses.length === 0,
+      });
+
+      if (!migrated) {
+        toast.error('La dirección seleccionada no existe en backend. Crea una nueva dirección.');
+        return;
+      }
+
+      orderAddress = migrated;
+      setSelectedAddressId(migrated.id);
+      setCreateNewAddress(false);
+    }
+
     setSubmitting(true);
     await new Promise((resolve) => setTimeout(resolve, 900));
 
     const paymentLabel =
       paymentOptions.find((option) => option.id === paymentMethodId)?.label ?? paymentMethodId;
-    const order = placeOrder({
-      items,
-      shippingAddress: selectedAddress,
-      shippingMethod: shippingMethod.label,
-      shippingCost: shippingMethod.price,
-      paymentMethod: paymentLabel,
-    });
-
-    if (createNewAddress) {
-      addAddress({ ...addressForm, isDefault: addresses.length === 0 });
+    let order;
+    try {
+      order = await placeOrder({
+        items,
+        shippingAddress: orderAddress,
+        shippingMethod: shippingMethod.label,
+        shippingCost: shippingMethod.price,
+        paymentMethod: paymentLabel,
+      });
+    } catch (error) {
+      setSubmitting(false);
+      const message = error instanceof Error ? error.message : 'No se pudo crear el pedido';
+      toast.error(message);
+      return;
     }
 
-    clearCart();
+    await clearCart();
     setSubmitting(false);
     toast.success('Pedido confirmado correctamente');
     navigate(`/order-success?order=${order.id}`);
@@ -229,6 +295,10 @@ const StoreCheckoutPage: React.FC = () => {
                   />
                 </div>
 
+                {isLoadingAddresses ? (
+                  <p className="text-sm text-gray-400">Cargando direcciones guardadas...</p>
+                ) : null}
+
                 {addresses.length > 0 && (
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
@@ -241,6 +311,24 @@ const StoreCheckoutPage: React.FC = () => {
                         {createNewAddress ? 'Usar guardada' : 'Agregar nueva'}
                       </button>
                     </div>
+
+                    {!createNewAddress && (
+                      <div>
+                        <label className="mb-1 block text-sm text-gray-300">Selecciona por ID</label>
+                        <select
+                          value={selectedAddressId}
+                          onChange={(event) => setSelectedAddressId(event.target.value)}
+                          className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white outline-none focus:border-indigo-500/50"
+                        >
+                          {addresses.map((address) => (
+                            <option key={address.id} value={address.id}>
+                              ID {address.backendAddressId ?? address.id} - {address.street}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
+
                     {!createNewAddress && (
                       <div className="grid gap-3">
                         {addresses.map((address: import('../../../../shared/types/common.types').CustomerAddress) => (
@@ -264,7 +352,7 @@ const StoreCheckoutPage: React.FC = () => {
                               )}
                             </div>
                             <p className="mt-1 text-sm text-gray-400">
-                              {address.street}, {address.city}, {address.state}
+                              ID {address.backendAddressId ?? address.id} · {address.street} {address.numeroCasa ?? ''}, {address.colonia ?? address.city}
                             </p>
                           </button>
                         ))}
@@ -308,25 +396,47 @@ const StoreCheckoutPage: React.FC = () => {
                       }
                     />
                     <Input
-                      label="Calle y número"
-                      className="md:col-span-2"
+                      label="Calle"
                       value={addressForm.street}
                       onChange={(event) =>
                         setAddressForm((current) => ({ ...current, street: event.target.value }))
                       }
                     />
                     <Input
-                      label="Ciudad"
-                      value={addressForm.city}
+                      label="Número de casa"
+                      type="number"
+                      value={String(addressForm.numeroCasa ?? 1)}
                       onChange={(event) =>
-                        setAddressForm((current) => ({ ...current, city: event.target.value }))
+                        setAddressForm((current) => ({ ...current, numeroCasa: Number(event.target.value) }))
                       }
                     />
                     <Input
-                      label="Estado"
-                      value={addressForm.state}
+                      label="Colonia"
+                      value={addressForm.colonia ?? ''}
                       onChange={(event) =>
-                        setAddressForm((current) => ({ ...current, state: event.target.value }))
+                        setAddressForm((current) => ({ ...current, colonia: event.target.value, city: event.target.value }))
+                      }
+                    />
+                    <Input
+                      label="Calle uno (opcional)"
+                      value={addressForm.calleUno ?? ''}
+                      onChange={(event) =>
+                        setAddressForm((current) => ({ ...current, calleUno: event.target.value }))
+                      }
+                    />
+                    <Input
+                      label="Calle dos (opcional)"
+                      value={addressForm.calleDos ?? ''}
+                      onChange={(event) =>
+                        setAddressForm((current) => ({ ...current, calleDos: event.target.value }))
+                      }
+                    />
+                    <Input
+                      label="Referencia (opcional)"
+                      className="md:col-span-2"
+                      value={addressForm.references ?? ''}
+                      onChange={(event) =>
+                        setAddressForm((current) => ({ ...current, references: event.target.value }))
                       }
                     />
                   </div>
