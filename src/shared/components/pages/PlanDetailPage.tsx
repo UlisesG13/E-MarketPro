@@ -223,7 +223,6 @@ const PlanDetailPage: React.FC = () => {
         </motion.div>
       </section>
 
-      {/* ─── SIMULATED DASHBOARD PREVIEW ─── */}
       <section className="py-16 px-6">
         <div className="max-w-6xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
@@ -287,7 +286,6 @@ const PlanDetailPage: React.FC = () => {
         </div>
       </section>
 
-      {/* ─── FEATURE GROUPS ─── */}
       <section className="py-16 px-6">
         <div className="max-w-6xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
@@ -335,7 +333,6 @@ const PlanDetailPage: React.FC = () => {
         </div>
       </section>
 
-      {/* ─── LIMITS ─── */}
       <section className="py-16 px-6 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/[0.02] to-transparent pointer-events-none" />
         <div className="max-w-4xl mx-auto relative z-10">
@@ -355,7 +352,6 @@ const PlanDetailPage: React.FC = () => {
         </div>
       </section>
 
-      {/* ─── TOOLS ─── */}
       <section className="py-16 px-6">
         <div className="max-w-6xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
@@ -388,7 +384,6 @@ const PlanDetailPage: React.FC = () => {
         </div>
       </section>
 
-      {/* ─── ROI CALCULATOR ─── */}
       <section className="py-16 px-6 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/[0.02] to-transparent pointer-events-none" />
         <div className="max-w-4xl mx-auto relative z-10">
@@ -459,7 +454,6 @@ const PlanDetailPage: React.FC = () => {
         </div>
       </section>
 
-      {/* ─── TESTIMONIALS ─── */}
       {planTestimonials.length > 0 && (
         <section className="py-16 px-6">
           <div className="max-w-5xl mx-auto">
@@ -501,7 +495,6 @@ const PlanDetailPage: React.FC = () => {
         </section>
       )}
 
-      {/* ─── PLAN COMPARISON MINI ─── */}
       <section className="py-16 px-6 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/[0.02] to-transparent pointer-events-none" />
         <div className="max-w-4xl mx-auto relative z-10">
@@ -561,7 +554,6 @@ const PlanDetailPage: React.FC = () => {
         </div>
       </section>
 
-      {/* ─── FAQ ─── */}
       <section className="py-16 px-6">
         <div className="max-w-3xl mx-auto">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
@@ -576,7 +568,6 @@ const PlanDetailPage: React.FC = () => {
         </div>
       </section>
 
-      {/* ─── CTA FINAL ─── */}
       <section className="py-20 px-6 relative">
         <div className="absolute inset-0 pointer-events-none opacity-30"
           style={{ background: `linear-gradient(135deg, ${plan.gradient[0]}08, ${plan.gradient[1]}08)` }} />

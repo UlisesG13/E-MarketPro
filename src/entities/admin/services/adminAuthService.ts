@@ -1,45 +1,35 @@
-import { apiClient } from '../../../shared/services/apiClient';
-import type { AdminUser, Store, AdminLoginResponse } from '../types/admin.types';
+import { apiClient, getRefreshToken } from '@/shared/services/apiClient';
+
+export interface AdminRegisterInput {
+  email: string;
+  password: string;
+  name: string;
+  store_name: string;
+  store_slug: string;
+}
 
 export interface AdminLoginInput {
   email: string;
   password: string;
 }
 
-export interface AdminRegisterInput {
-  name: string;
-  email: string;
-  password: string;
-  storeName: string;
-  phone?: string;
+interface AdminAuthResponse {
+  access_token: string;
+  refresh_token: string;
+  token_type: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  admin: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  store: any;
 }
 
 export const adminAuthService = {
-  /**
-   * Login for admin/seller role.
-   * POST /auth/admin/login
-   */
-  login: (input: AdminLoginInput): Promise<AdminLoginResponse> =>
-    apiClient.post<AdminLoginResponse>('/auth/admin/login', input, 'public'),
+  register: (data: AdminRegisterInput) =>
+    apiClient.post<AdminAuthResponse>('/auth/admin/register', data),
 
-  /**
-   * Logout admin from server (invalidate token).
-   * POST /auth/admin/logout
-   */
-  logout: (): Promise<void> =>
-    apiClient.post<void>('/auth/admin/logout', {}, 'admin'),
+  login: (data: AdminLoginInput) =>
+    apiClient.post<AdminAuthResponse>('/auth/admin/login', data),
 
-  /**
-   * Register a new admin/store.
-   * POST /auth/admin/register
-   */
-  register: (input: AdminRegisterInput): Promise<AdminLoginResponse> =>
-    apiClient.post<AdminLoginResponse>('/auth/admin/register', input, 'public'),
-
-  /**
-   * Get current admin profile.
-   * GET /auth/admin/me
-   */
-  me: (): Promise<{ admin: AdminUser; store: Store }> =>
-    apiClient.get<{ admin: AdminUser; store: Store }>('/auth/admin/me', 'admin'),
+  logout: () =>
+    apiClient.post<void>('/auth/logout', { refresh_token: getRefreshToken('admin') ?? '' }, 'admin'),
 };

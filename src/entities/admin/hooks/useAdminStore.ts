@@ -1,32 +1,30 @@
-import { useStoreStore } from '../store/storeStore';
-import { storeService } from '../services/storeService';
-import { useCallback } from 'react';
-import type { Store } from '../types/admin.types';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { storeService, type StoreUpdateInput } from '../services/storeService';
+import { toast } from 'sonner';
 
 export function useAdminStore() {
-  const { store, isLoading, setStore, updateStore, updateTheme } = useStoreStore();
+  const queryClient = useQueryClient();
 
-  const fetchStore = useCallback(async () => {
-    const data = await storeService.get();
-    setStore(data);
-    return data;
-  }, [setStore]);
+  const { data: store, isLoading } = useQuery({
+    queryKey: ['store', 'me'],
+    queryFn: () => storeService.get(),
+    staleTime: 1000 * 60 * 5,
+  });
 
-  const saveStore = useCallback(
-    async (data: Partial<Store>) => {
-      const updated = await storeService.update(data);
-      setStore(updated);
-      return updated;
+  const updateMutation = useMutation({
+    mutationFn: (data: StoreUpdateInput) => storeService.update(data),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['store', 'me'] });
+      toast.success('Tienda actualizada');
     },
-    [setStore]
-  );
+    onError: () => toast.error('Error al actualizar la tienda'),
+  });
 
   return {
-    store,
+    store: store ?? null,
     isLoading,
-    fetchStore,
-    saveStore,
-    updateStore,
-    updateTheme,
+    fetchStore: () => queryClient.invalidateQueries({ queryKey: ['store', 'me'] }),
+    saveStore: (data: StoreUpdateInput) => updateMutation.mutateAsync(data),
+    isSaving: updateMutation.isPending,
   };
 }

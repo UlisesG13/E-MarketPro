@@ -1,25 +1,93 @@
 import { apiClient } from '../../../shared/services/apiClient';
 import type { CustomerOrder, PlaceOrderInput } from '../types/order.types';
 
+// ─── Backend DTOs ─────────────────────────────────────────
+
+interface BackendPedido {
+  pedido_id: number;
+  usuario_id: string;
+  estado: string;
+  fecha_pedido: string;
+  subtotal: number;
+  total?: number;
+  notas: string;
+  direccion: Record<string, unknown>;
+}
+
+// ─── Adapter ─────────────────────────────────────────────
+
+function mapEstado(estado: string): CustomerOrder['status'] {
+  const map: Record<string, CustomerOrder['status']> = {
+    pendiente: 'pending',
+    procesando: 'processing',
+    enviado: 'shipped',
+    entregado: 'delivered',
+    cancelado: 'cancelled',
+  };
+  return map[estado] ?? 'pending';
+}
+
+function adaptOrder(p: BackendPedido): CustomerOrder {
+  const addr = p.direccion ?? {};
+  return {
+    id: String(p.pedido_id),
+    customerName: p.usuario_id,
+    customerEmail: '',
+    status: mapEstado(p.estado),
+    date: p.fecha_pedido,
+    total: p.total ?? p.subtotal,
+    items: [],
+    shippingAddress: [addr['calle'], addr['colonia']].filter(Boolean).join(', '),
+    paymentMethod: 'No especificado',
+    storeId: '',
+    storeName: '',
+    shippingMethod: 'Estándar',
+    shippingCost: 0,
+  };
+}
+
+// ─── Service ─────────────────────────────────────────────
+
 export const customerOrderService = {
   /**
-   * Get the customer's order history.
-   * GET /customer/orders
+   * GET /pedidos/user/:userId/
    */
-  list: (): Promise<CustomerOrder[]> =>
-    apiClient.get<CustomerOrder[]>('/customer/orders', 'customer'),
+  list: async (): Promise<CustomerOrder[]> => {
+    const raw = localStorage.getItem('emarketpro-customer-auth');
+    const userId: string = raw ? (JSON.parse(raw)?.state?.user?.id ?? '') : '';
+    if (!userId) return [];
+    const data = await apiClient.get<BackendPedido[]>(`/pedidos/user/${userId}`, 'customer');
+    return data.map(adaptOrder);
+  },
 
   /**
-   * Get a single order by ID.
-   * GET /customer/orders/:id
+   * GET /pedidos/:id/
    */
-  getById: (id: string): Promise<CustomerOrder> =>
-    apiClient.get<CustomerOrder>(`/customer/orders/${id}`, 'customer'),
+  getById: async (id: string): Promise<CustomerOrder> => {
+    const data = await apiClient.get<BackendPedido>(`/pedidos/${id}`, 'customer');
+    return adaptOrder(data);
+  },
 
   /**
-   * Place a new order.
-   * POST /orders
+   * POST /pedidos/
    */
-  create: (input: PlaceOrderInput): Promise<CustomerOrder> =>
-    apiClient.post<CustomerOrder>('/orders', input, 'customer'),
+  create: async (input: PlaceOrderInput): Promise<CustomerOrder> => {
+    const raw = localStorage.getItem('emarketpro-customer-auth');
+    const userId: string = raw ? (JSON.parse(raw)?.state?.user?.id ?? '') : '';
+
+    const subtotal = input.items.reduce((s, i) => s + i.product.price * i.quantity, 0);
+
+    const data = await apiClient.post<BackendPedido>(
+      '/pedidos/',
+      {
+        usuario_id: userId,
+        estado: 'pendiente',
+        subtotal,
+        notas: '',
+        direccion: { direccion_id: input.shippingAddressId },
+      },
+      'customer'
+    );
+    return adaptOrder(data);
+  },
 };

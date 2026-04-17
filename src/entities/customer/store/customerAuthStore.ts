@@ -1,33 +1,52 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { CustomerUser } from '../types/customer.types';
+import { tokenMemory, setRefreshToken, clearRefreshToken } from '@/shared/services/apiClient';
+
+interface CustomerUser {
+  id: string;
+  email: string;
+  name: string;
+  phone: string | null;
+  avatar: string | null;
+}
 
 interface CustomerAuthState {
-  user: CustomerUser | null;
-  token: string | null;
+  customer: CustomerUser | null;
   isAuthenticated: boolean;
-  login: (user: CustomerUser, token: string) => void;
+  setAuth: (customer: CustomerUser, accessToken: string, refreshToken: string) => void;
+  updateProfile: (data: Partial<CustomerUser>) => void;
   logout: () => void;
-  setUser: (user: CustomerUser) => void;
 }
 
 export const useCustomerAuthStore = create<CustomerAuthState>()(
   persist(
     (set) => ({
-      user: null,
-      token: null,
+      customer: null,
       isAuthenticated: false,
 
-      login: (user, token) => {
-        set({ user, token, isAuthenticated: true });
+      setAuth: (customer, accessToken, refreshToken) => {
+        tokenMemory.setCustomerToken(accessToken);
+        setRefreshToken('customer', refreshToken);
+        set({ customer, isAuthenticated: true });
       },
+
+      updateProfile: (data) =>
+        set((state) => ({
+          customer: state.customer ? { ...state.customer, ...data } : null,
+        })),
 
       logout: () => {
-        set({ user: null, token: null, isAuthenticated: false });
+        tokenMemory.clearCustomerToken();
+        clearRefreshToken('customer');
+        set({ customer: null, isAuthenticated: false });
       },
-
-      setUser: (user) => set({ user }),
     }),
-    { name: 'emarketpro-customer-auth' }
+    {
+      name: 'emarketpro-customer-auth',
+      partialize: (state) => ({
+        customer: state.customer,
+        isAuthenticated: state.isAuthenticated,
+      }),
+    }
   )
 );

@@ -2,13 +2,15 @@
 import { motion, useInView } from 'framer-motion';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer, LineChart, Line,
+  ResponsiveContainer, LineChart, Line, Cell,
 } from 'recharts';
 import { DollarSign, TrendingUp, Users, Target, Calculator, CheckCircle } from 'lucide-react';
 import { projectPhases, budgetSummary, competitors, costByRole } from '../../../../shared/services/mockData';
 import { formatCurrency } from '../../../../shared/utils/format';
 import { cn } from '../../../../shared/utils/cn';
 import Badge from '../../../../shared/components/atoms/Badge';
+import FeatureGate from '../../../../shared/components/atoms/FeatureGate';
+import UpgradeBanner from '../../../../shared/components/molecules/UpgradeBanner';
 
 /* ═══════════ Animated Number ═══════════ */
 function AnimatedNumber({ value, duration = 2 }: { value: number; duration?: number }) {
@@ -226,7 +228,8 @@ const FinancialPage: React.FC = () => {
         </div>
       </motion.div>
 
-      {/* Charts Row */}
+      {/* Charts Row — requires advanced analytics */}
+      <FeatureGate feature="hasAdvancedAnalytics" fallback={<UpgradeBanner message="Las gráficas avanzadas y el punto de equilibrio requieren el plan Pro. Actualiza tu plan." />}>
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Bar chart: cost by phase */}
         <motion.div
@@ -247,7 +250,7 @@ const FinancialPage: React.FC = () => {
               />
               <Bar dataKey="cost" radius={[6, 6, 0, 0]}>
                 {phaseCostData.map((entry, i) => (
-                  <motion.rect key={i} fill={entry.fill} />
+                  <Cell key={i} fill={entry.fill} />
                 ))}
               </Bar>
             </BarChart>
@@ -339,6 +342,8 @@ const FinancialPage: React.FC = () => {
           </table>
         </div>
       </motion.div>
+
+      </FeatureGate>
 
       {/* Cost by Role */}
       <motion.div

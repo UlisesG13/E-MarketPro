@@ -1,81 +1,37 @@
 import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Mail, Lock, Zap, ArrowRight, ShoppingBag } from 'lucide-react';
-import { useAdminAuthStore } from '../../../entities/admin/store/adminAuthStore';
-import { useCustomerAuthStore } from '../../../entities/customer/store/customerAuthStore';
+import { useAdminAuth } from '../../../entities/admin/hooks/useAdminAuth';
+import { useCustomerAuth } from '../../../entities/customer/hooks/useCustomerAuth';
 import Button from '../atoms/Button';
 import Input from '../atoms/Input';
-import { toast } from 'sonner';
-
-
-// ─── Demo credentials ─────────────────────────────────────────────────────────
-const DEMO_ADMIN_EMAIL = 'demo@emarketpro.mx';
-const DEMO_ADMIN_PASSWORD = 'demo123';
-const DEMO_CUSTOMER_EMAIL = 'cliente@emarketpro.mx';
-const DEMO_CUSTOMER_PASSWORD = 'cliente123';
 
 type LoginMode = 'admin' | 'customer';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState<LoginMode>('admin');
-  const navigate = useNavigate();
   const location = useLocation();
 
-  const adminLogin = useAdminAuthStore((s) => s.login);
-  const customerLogin = useCustomerAuthStore((s) => s.login);
+  const { login: adminLogin, isLoggingIn: isAdminLoading } = useAdminAuth();
+  const { login: customerLogin, isLoggingIn: isCustomerLoading } = useCustomerAuth();
 
-  // Check if there's a redirect hint (CustomerProtectedRoute passes state.redirectTo)
+  const isLoading = isAdminLoading || isCustomerLoading;
+
   const redirectTo = (location.state as { redirectTo?: string } | null)?.redirectTo;
-
   React.useEffect(() => {
     if (redirectTo === 'customer') setMode('customer');
   }, [redirectTo]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-
-    await new Promise((r) => setTimeout(r, 600));
-
+    if (!email.trim() || !password) return;
     if (mode === 'admin') {
-      if (email.trim().toLowerCase() === DEMO_ADMIN_EMAIL && password === DEMO_ADMIN_PASSWORD) {
-        adminLogin(
-          { id: '1', name: 'Ulises Gutiérrez', email: DEMO_ADMIN_EMAIL, avatar: '', role: 'admin', storeId: 'store-1', plan: 'free', createdAt: '' },
-          { id: 'store-1', name: 'E-Market Demo', description: 'Tienda demo', address: '', phone: '', email: '', ownerId: '1', theme: { primaryColor: '#7c3aed', logo: '', banner: '' }, plan: 'free', createdAt: '' },
-          'demo-token-admin'
-        );
-        toast.success('¡Bienvenido a E-MARKET PRO!');
-        navigate('/dashboard');
-      } else {
-        toast.error('Credenciales incorrectas. Usa demo@emarketpro.mx / demo123');
-      }
+      adminLogin({ email: email.trim(), password });
     } else {
-      if (email.trim().toLowerCase() === DEMO_CUSTOMER_EMAIL && password === DEMO_CUSTOMER_PASSWORD) {
-        customerLogin(
-          { id: 'c-1', name: 'Cliente Demo', email: DEMO_CUSTOMER_EMAIL, avatar: '', role: 'customer', preferences: { marketingEmails: true, orderUpdates: true, savedCards: false }, createdAt: '' },
-          'demo-token-customer'
-        );
-        toast.success('¡Bienvenido!');
-        navigate('/store');
-      } else {
-        toast.error('Credenciales incorrectas. Usa cliente@emarketpro.mx / cliente123');
-      }
-    }
-
-    setLoading(false);
-  };
-
-  const fillDemo = () => {
-    if (mode === 'admin') {
-      setEmail(DEMO_ADMIN_EMAIL);
-      setPassword(DEMO_ADMIN_PASSWORD);
-    } else {
-      setEmail(DEMO_CUSTOMER_EMAIL);
-      setPassword(DEMO_CUSTOMER_PASSWORD);
+      customerLogin({ email: email.trim(), password });
     }
   };
 
@@ -93,8 +49,12 @@ const LoginPage: React.FC = () => {
             <Zap className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-[var(--app-text)]">E-Market<span className="text-[var(--app-primary)]">Pro</span></h1>
-            <p className="text-xs text-[var(--app-text-soft)]">{mode === 'admin' ? 'Panel de administración' : 'Tienda en línea'}</p>
+            <h1 className="text-xl font-bold text-[var(--app-text)]">
+              E-Market<span className="text-[var(--app-primary)]">Pro</span>
+            </h1>
+            <p className="text-xs text-[var(--app-text-soft)]">
+              {mode === 'admin' ? 'Panel de administración' : 'Tienda en línea'}
+            </p>
           </div>
         </div>
 
@@ -110,7 +70,7 @@ const LoginPage: React.FC = () => {
             }`}
           >
             <Zap className="w-3.5 h-3.5" />
-            Administrador
+            Vendedor
           </button>
           <button
             type="button"
@@ -128,20 +88,22 @@ const LoginPage: React.FC = () => {
 
         {/* Heading */}
         <div className="mb-6">
-          <h2 className="mb-2 text-2xl font-bold text-[var(--app-text)]">Iniciar sesión</h2>
+          <h2 className="mb-1 text-2xl font-bold text-[var(--app-text)]">Iniciar sesión</h2>
           <p className="text-sm text-[var(--app-text-muted)]">
-            {mode === 'admin' ? 'Accede al panel de vendedor' : 'Accede a tu cuenta de comprador'}
+            {mode === 'admin'
+              ? 'Accede al panel de tu tienda'
+              : 'Accede a tu cuenta de comprador'}
           </p>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <Input
             label="Correo electrónico"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder={mode === 'admin' ? 'demo@emarketpro.mx' : 'cliente@emarketpro.mx'}
+            placeholder="tu@correo.com"
             icon={<Mail className="w-4 h-4" />}
             required
           />
@@ -157,31 +119,30 @@ const LoginPage: React.FC = () => {
 
           <Button
             type="submit"
-            className="w-full"
-            loading={loading}
-            icon={!loading ? <ArrowRight className="w-4 h-4" /> : undefined}
+            className="w-full mt-2"
+            loading={isLoading}
+            disabled={!email.trim() || !password}
+            icon={!isLoading ? <ArrowRight className="w-4 h-4" /> : undefined}
           >
-            {loading ? 'Verificando...' : 'Ingresar'}
+            {isLoading ? 'Verificando...' : 'Ingresar'}
           </Button>
         </form>
 
-        {/* Demo credentials */}
-        <div className="mt-6 rounded-xl border border-[var(--app-border-strong)] bg-[var(--app-primary-soft)] p-4">
-          <p className="mb-2 text-xs font-medium text-[var(--app-primary)]">Credenciales demo ({mode === 'admin' ? 'Admin' : 'Cliente'}):</p>
-          <p className="font-mono text-xs text-[var(--app-text-muted)]">
-            {mode === 'admin' ? 'demo@emarketpro.mx / demo123' : 'cliente@emarketpro.mx / cliente123'}
+        {/* Register link */}
+        <div className="mt-6 text-center">
+          <p className="text-sm text-[var(--app-text-muted)]">
+            ¿No tienes cuenta?{' '}
+            <Link
+              to="/register"
+              state={{ mode }}
+              className="font-medium text-[var(--app-primary)] hover:opacity-80 transition-opacity"
+            >
+              {mode === 'admin' ? 'Crea tu tienda gratis' : 'Regístrate aquí'}
+            </Link>
           </p>
-          <button
-            type="button"
-            onClick={fillDemo}
-            className="mt-2 text-xs font-medium text-[var(--app-primary)] transition-colors hover:opacity-80"
-          >
-            Llenar automáticamente →
-          </button>
         </div>
       </div>
 
-      {/* Footer */}
       <p className="mt-6 text-center text-xs text-[var(--app-text-soft)]">
         Universidad Politécnica de Chiapas · Grupo 8-B · Análisis Financiero
       </p>

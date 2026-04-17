@@ -1,72 +1,86 @@
-import { useCallback } from 'react';
-import { useAdminProductsStore } from '../store/adminProductsStore';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { productService } from '../services/productService';
-import type { CreateProductInput, UpdateProductInput } from '../types/products.types';
+import type { ProductFilters, CreateProductInput } from '../services/productService';
+import { useAdminAuthStore } from '../store/adminAuthStore';
+import { ApiError } from '@/shared/services/apiClient';
 
-export function useAdminProducts() {
-  const {
-    products,
-    isLoading,
-    error,
-    setProducts,
-    addProduct,
-    updateProduct,
-    removeProduct,
-    setLoading,
-    setError,
-    getProductById,
-  } = useAdminProductsStore();
+const productKeys = {
+  all: (storeId: string) => ['products', storeId] as const,
+  filtered: (storeId: string, filters: ProductFilters) => ['products', storeId, filters] as const,
+  detail: (storeId: string, id: string) => ['products', storeId, id] as const,
+  count: (storeId: string) => ['products', storeId, 'count'] as const,
+};
 
-  const fetchProducts = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const data = await productService.list();
-      setProducts(data);
-      return data;
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Error al cargar productos';
-      setError(msg);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  }, [setLoading, setError, setProducts]);
+export function useAdminProducts(filters: ProductFilters = {}) {
+  const storeId = useAdminAuthStore((s) => s.store?.id ?? '');
 
-  const createProduct = useCallback(
-    async (input: CreateProductInput) => {
-      const product = await productService.create(input);
-      addProduct(product);
-      return product;
+  return useQuery({
+    queryKey: productKeys.filtered(storeId, filters),
+    queryFn: () => productService.getAll(filters),
+    enabled: !!storeId,
+    staleTime: 1000 * 60 * 2,
+  });
+}
+
+export function useProductCount() {
+  const storeId = useAdminAuthStore((s) => s.store?.id ?? '');
+
+  return useQuery({
+    queryKey: productKeys.count(storeId),
+    queryFn: () => productService.getCount(),
+    enabled: !!storeId,
+  });
+}
+
+export function useCreateProduct() {
+  const queryClient = useQueryClient();
+  const storeId = useAdminAuthStore((s) => s.store?.id ?? '');
+
+  return useMutation({
+    mutationFn: (data: CreateProductInput) => productService.create(data),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['products', storeId] });
+      toast.success('Producto creado exitosamente');
     },
-    [addProduct]
-  );
-
-  const editProduct = useCallback(
-    async (id: string, input: UpdateProductInput) => {
-      const updated = await productService.update(id, input);
-      updateProduct(id, updated);
-      return updated;
+    onError: (error: unknown) => {
+      const detail = error instanceof ApiError ? error.detail : 'Error al crear el producto';
+      toast.error(detail);
     },
-    [updateProduct]
-  );
+  });
+}
 
-  const deleteProduct = useCallback(
-    async (id: string) => {
-      await productService.remove(id);
-      removeProduct(id);
+export function useUpdateProduct() {
+  const queryClient = useQueryClient();
+  const storeId = useAdminAuthStore((s) => s.store?.id ?? '');
+
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Partial<CreateProductInput> }) =>
+      productService.update(id, data),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['products', storeId] });
+      toast.success('Producto actualizado');
     },
-    [removeProduct]
-  );
+    onError: (error: unknown) => {
+      const detail = error instanceof ApiError ? error.detail : 'Error al actualizar el producto';
+      toast.error(detail);
+    },
+  });
+}
 
-  return {
-    products,
-    isLoading,
-    error,
-    fetchProducts,
-    createProduct,
-    editProduct,
-    deleteProduct,
-    getProductById,
-  };
+export function useDeleteProduct() {
+  const queryClient = useQueryClient();
+  const storeId = useAdminAuthStore((s) => s.store?.id ?? '');
+
+  return useMutation({
+    mutationFn: (id: string) => productService.delete(id),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['products', storeId] });
+      toast.success('Producto eliminado');
+    },
+    onError: (error: unknown) => {
+      const detail = error instanceof ApiError ? error.detail : 'Error al eliminar el producto';
+      toast.error(detail);
+    },
+  });
 }

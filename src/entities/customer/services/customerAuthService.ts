@@ -1,37 +1,32 @@
-import { apiClient } from '../../../shared/services/apiClient';
-import type { CustomerUser, CustomerLoginResponse, CustomerRegisterInput } from '../types/customer.types';
+import { apiClient, getRefreshToken } from '@/shared/services/apiClient';
+
+export interface CustomerRegisterInput {
+  email: string;
+  password: string;
+  name: string;
+  phone?: string;
+}
 
 export interface CustomerLoginInput {
   email: string;
   password: string;
 }
 
+interface CustomerAuthResponse {
+  access_token: string;
+  refresh_token: string;
+  token_type: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  customer: any;
+}
+
 export const customerAuthService = {
-  /**
-   * Login for customer role.
-   * POST /auth/customer/login
-   */
-  login: (input: CustomerLoginInput): Promise<CustomerLoginResponse> =>
-    apiClient.post<CustomerLoginResponse>('/auth/customer/login', input, 'public'),
+  register: (data: CustomerRegisterInput) =>
+    apiClient.post<CustomerAuthResponse>('/auth/customer/register', data),
 
-  /**
-   * Logout customer from server.
-   * POST /auth/customer/logout
-   */
-  logout: (): Promise<void> =>
-    apiClient.post<void>('/auth/customer/logout', {}, 'customer'),
+  login: (data: CustomerLoginInput) =>
+    apiClient.post<CustomerAuthResponse>('/auth/customer/login', data),
 
-  /**
-   * Register a new customer.
-   * POST /auth/customer/register
-   */
-  register: (input: CustomerRegisterInput): Promise<CustomerLoginResponse> =>
-    apiClient.post<CustomerLoginResponse>('/auth/customer/register', input, 'public'),
-
-  /**
-   * Get current customer profile.
-   * GET /auth/customer/me
-   */
-  me: (): Promise<CustomerUser> =>
-    apiClient.get<CustomerUser>('/auth/customer/me', 'customer'),
+  logout: () =>
+    apiClient.post<void>('/auth/logout', { refresh_token: getRefreshToken('customer') ?? '' }, 'customer'),
 };

@@ -24,7 +24,7 @@ const ClientLayout: React.FC = () => {
   const favoritesCount = useFavoritesStore((state) => state.productIds.length);
   const darkMode = useUIStore((state) => state.darkMode);
   const toggleDarkMode = useUIStore((state) => state.toggleDarkMode);
-  const user = useAdminAuthStore((state) => state.user);
+  const user = useAdminAuthStore((state) => state.admin);
   const isAuthenticated = useAdminAuthStore((state) => state.isAuthenticated);
   const logout = useAdminAuthStore((state) => state.logout);
   const [search, setSearch] = useState('');

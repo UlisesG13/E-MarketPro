@@ -1,4 +1,22 @@
 ﻿// ─────────────────────────────────────────────────────────
+// PLAN TYPES — feature flags system
+// ─────────────────────────────────────────────────────────
+
+export type PlanId = 'basic' | 'pro' | 'enterprise';
+
+export interface PlanFeatures {
+  maxProducts: number | 'unlimited';
+  maxAdminUsers: number | 'unlimited';
+  hasAdvancedAnalytics: boolean;
+  hasCustomDomain: boolean;
+  hasPrioritySupport: boolean;
+  hasCSVImportExport: boolean;
+  hasExtendedMediaStorage: boolean;
+  paymentCommissionPercent: number;
+  paymentCommissionFixed: number; // en MXN
+}
+
+// ─────────────────────────────────────────────────────────
 // BASE TYPES — re-exported here for backward compatibility
 // These support old component imports that reference common.types
 // ─────────────────────────────────────────────────────────
@@ -211,11 +229,35 @@ export interface ApiResponse<T> {
 }
 
 export interface PaginatedResponse<T> {
-  data: T[];
+  items: T[];
   total: number;
   page: number;
   limit: number;
-  totalPages: number;
+  pages: number;
+}
+
+// ─── Auth ─────────────────────────────────────────────────
+
+export interface AuthTokens {
+  access_token: string;
+  refresh_token: string;
+  token_type: string;
+}
+
+// ─── Backend plan ─────────────────────────────────────────
+
+export interface Plan {
+  id: PlanId;
+  name: string;
+  price_monthly: number;
+  max_products: number | null;
+  max_admin_users: number | null;
+  has_advanced_analytics: boolean;
+  has_custom_domain: boolean;
+  has_csv_import_export: boolean;
+  has_extended_media: boolean;
+  payment_commission_percent: number;
+  payment_commission_fixed: number;
 }
 
 // ─────────────────────────────────────────────────────────

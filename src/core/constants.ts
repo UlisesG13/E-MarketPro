@@ -1,14 +1,10 @@
-// ─────────────────────────────────────────────────────────
-// APP CONSTANTS
-// ─────────────────────────────────────────────────────────
+
 
 export const APP_NAME = 'E-MarketPro';
 export const APP_VERSION = '2.0.0';
 
-// ─── API ─────────────────────────────────────────────────
 export const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api';
 
-// ─── Admin Routes ─────────────────────────────────────────
 export const ADMIN_ROUTES = {
   DASHBOARD: '/dashboard',
   PRODUCTS: '/products',
@@ -18,7 +14,6 @@ export const ADMIN_ROUTES = {
   CHECKOUT: (planId: string) => `/checkout/${planId}`,
 } as const;
 
-// ─── Customer Routes ──────────────────────────────────────
 export const CUSTOMER_ROUTES = {
   STORE: '/store',
   PRODUCT: (id: string) => `/store/product/${id}`,
@@ -32,7 +27,6 @@ export const CUSTOMER_ROUTES = {
   FAVORITES: '/favorites',
 } as const;
 
-// ─── Public Routes ────────────────────────────────────────
 export const PUBLIC_ROUTES = {
   HOME: '/',
   LOGIN: '/login',
@@ -42,7 +36,6 @@ export const PUBLIC_ROUTES = {
   COMPARE: '/comparar',
 } as const;
 
-// ─── Local Storage Keys ───────────────────────────────────
 export const STORAGE_KEYS = {
   ADMIN_AUTH: 'emarketpro-admin-auth',
   CUSTOMER_AUTH: 'emarketpro-customer-auth',

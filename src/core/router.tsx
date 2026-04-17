@@ -38,6 +38,7 @@ function CustomerProtectedRoute({ children }: { children: React.ReactNode }) {
 
 const LandingPage = lazy(() => import('../shared/components/pages/LandingPage'));
 const LoginPage = lazy(() => import('../shared/components/pages/LoginPage'));
+const RegisterPage = lazy(() => import('../shared/components/pages/RegisterPage'));
 const NotFoundPage = lazy(() => import('../shared/components/pages/NotFoundPage'));
 const ErrorPage = lazy(() => import('../shared/components/pages/ErrorPage'));
 const PlanDetailPage = lazy(() => import('../shared/components/pages/PlanDetailPage'));
@@ -91,6 +92,10 @@ export const router = createBrowserRouter([
       {
         path: '/login',
         element: <LoginPage />,
+      },
+      {
+        path: '/register',
+        element: <RegisterPage />,
       },
     ],
   },

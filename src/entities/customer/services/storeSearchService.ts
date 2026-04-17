@@ -22,44 +22,115 @@ export interface SearchProductsParams {
   limit?: number;
 }
 
+// ─── Backend DTOs ─────────────────────────────────────────
+
+interface BackendProducto {
+  producto_id: string;
+  nombre: string;
+  precio: number;
+  descripcion?: string;
+  esta_activo: boolean;
+  esta_destacado: boolean;
+  categoria_id: number;
+  fecha_creacion: string;
+}
+
+interface BackendCategoria {
+  categoria_id: number;
+  nombre: string;
+  seccion_id: number;
+}
+
+// ─── Adapter ─────────────────────────────────────────────
+
+function adaptProduct(p: BackendProducto): Product {
+  return {
+    id: p.producto_id,
+    name: p.nombre,
+    description: p.descripcion ?? '',
+    price: p.precio,
+    category: String(p.categoria_id),
+    stock: 0,
+    image: '',
+    status: p.esta_activo ? 'active' : 'archived',
+    sku: p.producto_id,
+    rating: 0,
+    reviews: 0,
+    createdAt: p.fecha_creacion,
+  };
+}
+
+// ─── Service ─────────────────────────────────────────────
+
 export const storeSearchService = {
   /**
-   * List all public stores.
-   * GET /stores
+   * Backend has no multi-store concept — returns a single virtual store.
+   * GET /productos/ to get product count.
    */
-  listStores: (): Promise<StorePublic[]> =>
-    apiClient.get<StorePublic[]>('/stores', 'public'),
-
-  /**
-   * Get products from a specific store.
-   * GET /stores/:storeId/products
-   */
-  getStoreProducts: (storeId: string): Promise<Product[]> =>
-    apiClient.get<Product[]>(`/stores/${storeId}/products`, 'public'),
-
-  /**
-   * Get a single product by ID.
-   * GET /products/:id
-   */
-  getProductById: (id: string): Promise<Product> =>
-    apiClient.get<Product>(`/products/${id}`, 'public'),
-
-  /**
-   * Search products across all stores.
-   * GET /search/products?q=xxx&category=xxx
-   */
-  searchProducts: (params: SearchProductsParams): Promise<Product[]> => {
-    const query = new URLSearchParams();
-    Object.entries(params).forEach(([key, val]) => {
-      if (val !== undefined && val !== '') query.append(key, String(val));
-    });
-    return apiClient.get<Product[]>(`/search/products?${query.toString()}`, 'public');
+  listStores: async (): Promise<StorePublic[]> => {
+    const productos = await apiClient.get<BackendProducto[]>('/productos/', 'public').catch(() => []);
+    return [{
+      id: 'default',
+      name: 'Golazo Store',
+      description: 'Tienda principal',
+      productCount: productos.length,
+    }];
   },
 
   /**
-   * List product categories.
-   * GET /categories
+   * GET /productos/  (filtered by category when storeId maps to one)
    */
-  listCategories: (): Promise<{ slug: string; name: string; count: number }[]> =>
-    apiClient.get<{ slug: string; name: string; count: number }[]>('/categories', 'public'),
+  getStoreProducts: async (storeId: string): Promise<Product[]> => {
+    void storeId;
+    const data = await apiClient.get<BackendProducto[]>('/productos/', 'public');
+    return data.filter((p) => p.esta_activo).map(adaptProduct);
+  },
+
+  /**
+   * GET /productos/:id/
+   */
+  getProductById: async (id: string): Promise<Product> => {
+    const data = await apiClient.get<BackendProducto>(`/productos/${id}/`, 'public');
+    return adaptProduct(data);
+  },
+
+  /**
+   * Search by name (client-side filter) or by category ID.
+   * GET /productos/by-categoria/:id/ when category is provided.
+   */
+  searchProducts: async (params: SearchProductsParams): Promise<Product[]> => {
+    let data: BackendProducto[];
+
+    if (params.category) {
+      data = await apiClient.get<BackendProducto[]>(
+        `/productos/by-categoria/${params.category}/`,
+        'public'
+      ).catch(() => []);
+    } else {
+      data = await apiClient.get<BackendProducto[]>('/productos/', 'public').catch(() => []);
+    }
+
+    let results = data.filter((p) => p.esta_activo);
+
+    if (params.q) {
+      const q = params.q.toLowerCase();
+      results = results.filter((p) => p.nombre.toLowerCase().includes(q));
+    }
+    if (params.minPrice !== undefined) results = results.filter((p) => p.precio >= params.minPrice!);
+    if (params.maxPrice !== undefined) results = results.filter((p) => p.precio <= params.maxPrice!);
+
+    return results.map(adaptProduct);
+  },
+
+  /**
+   * GET /categorias/
+   */
+  listCategories: async (): Promise<{ slug: string; name: string; count: number }[]> => {
+    const data = await apiClient.get<BackendCategoria[]>('/categorias/', 'public').catch(() => []);
+    return data.map((c) => ({
+      slug: String(c.categoria_id),
+      name: c.nombre,
+      count: 0,
+    }));
+  },
 };

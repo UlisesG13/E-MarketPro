@@ -1,58 +1,56 @@
-import { useCallback } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import { useCustomerAuthStore } from '../store/customerAuthStore';
-import { useCustomerProfileStore } from '../store/customerProfileStore';
 import { customerAuthService } from '../services/customerAuthService';
-import type { CustomerLoginInput } from '../services/customerAuthService';
-import type { CustomerRegisterInput } from '../types/customer.types';
+import type { CustomerLoginInput, CustomerRegisterInput } from '../services/customerAuthService';
+import { ApiError } from '@/shared/services/apiClient';
 
 export function useCustomerAuth() {
-  const { user, token, isAuthenticated, login, logout } = useCustomerAuthStore();
-  const { updateProfile, resetProfile } = useCustomerProfileStore();
+  const navigate = useNavigate();
+  const { setAuth, logout: logoutStore, isAuthenticated, customer } = useCustomerAuthStore();
 
-  const signIn = useCallback(
-    async (input: CustomerLoginInput) => {
-      const response = await customerAuthService.login(input);
-      login(response.customer, response.token);
-      // Preload profile info
-      updateProfile({
-        fullName: response.customer.name,
-        email: response.customer.email,
-      });
-      return response;
+  const loginMutation = useMutation({
+    mutationFn: (data: CustomerLoginInput) => customerAuthService.login(data),
+    onSuccess: (response) => {
+      setAuth(response.customer, response.access_token, response.refresh_token);
+      toast.success(`Bienvenido, ${response.customer.name}`);
+      navigate('/store');
     },
-    [login, updateProfile]
-  );
-
-  const signUp = useCallback(
-    async (input: CustomerRegisterInput) => {
-      const response = await customerAuthService.register(input);
-      login(response.customer, response.token);
-      updateProfile({
-        fullName: response.customer.name,
-        email: response.customer.email,
-      });
-      return response;
+    onError: (error: unknown) => {
+      const detail = error instanceof ApiError ? error.detail : 'Error al iniciar sesión';
+      toast.error(detail);
     },
-    [login, updateProfile]
-  );
+  });
 
-  const signOut = useCallback(async () => {
+  const registerMutation = useMutation({
+    mutationFn: (data: CustomerRegisterInput) => customerAuthService.register(data),
+    onSuccess: (response) => {
+      setAuth(response.customer, response.access_token, response.refresh_token);
+      toast.success('Cuenta creada exitosamente');
+      navigate('/store');
+    },
+    onError: (error: unknown) => {
+      const detail = error instanceof ApiError ? error.detail : 'Error al crear la cuenta';
+      toast.error(detail);
+    },
+  });
+
+  const logout = async () => {
     try {
       await customerAuthService.logout();
-    } catch {
-      // Always clear local state even if API call fails
-    } finally {
-      logout();
-      resetProfile();
-    }
-  }, [logout, resetProfile]);
+    } catch { /* always clear local state */ }
+    logoutStore();
+    navigate('/login');
+  };
 
   return {
-    user,
-    token,
     isAuthenticated,
-    signIn,
-    signUp,
-    signOut,
+    customer,
+    login: loginMutation.mutate,
+    register: registerMutation.mutate,
+    logout,
+    isLoggingIn: loginMutation.isPending,
+    isRegistering: registerMutation.isPending,
   };
 }

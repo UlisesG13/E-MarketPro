@@ -1,4 +1,4 @@
-﻿import type {
+import type {
   Product,
   Order,
   TeamMember,
@@ -27,32 +27,32 @@ const productImages = [
   'https://images.unsplash.com/photo-1625772452859-1c03d5bf1137?w=400',
 ];
 
-const categories = ['Electr├│nicos', 'Ropa', 'Hogar', 'Deportes', 'Accesorios'];
+const categories = ['Electrónicos', 'Ropa', 'Hogar', 'Deportes', 'Accesorios'];
 
 const productNames: string[] = [
-  'Aud├¡fonos Bluetooth Pro', 'Smartwatch Deportivo X1', 'C├ímara de Seguridad WiFi',
-  'Teclado Mec├ínico RGB', 'Mouse Ergon├│mico Inal├ímbrico', 'Monitor Curvo 27"',
-  'Parlante Port├ítil Bass+', 'Tablet Android 10"', 'Cargador Solar Port├ítil',
-  'Hub USB-C 8 en 1', 'Playera Premium Algod├│n', 'Sudadera Urban Style',
+  'Audífonos Bluetooth Pro', 'Smartwatch Deportivo X1', 'Cámara de Seguridad WiFi',
+  'Teclado Mecánico RGB', 'Mouse Ergonómico Inalámbrico', 'Monitor Curvo 27"',
+  'Parlante Portátil Bass+', 'Tablet Android 10"', 'Cargador Solar Portátil',
+  'Hub USB-C 8 en 1', 'Playera Premium Algodón', 'Sudadera Urban Style',
   'Jeans Slim Fit Classic', 'Chamarra Impermeable', 'Gorra Deportiva Ajustable',
   'Tenis Running Pro', 'Camisa Oxford Elegante', 'Shorts Deportivos Dry-Fit',
-  'Vestido Casual Verano', 'Mochila Urban Explorer', 'L├ímpara LED Escritorio',
+  'Vestido Casual Verano', 'Mochila Urban Explorer', 'Lámpara LED Escritorio',
   'Set de Sartenes Antiadherentes', 'Organizador de Escritorio', 'Almohada Memory Foam',
-  'Cafetera Express Autom├ítica', 'Aspiradora Robot Smart', 'Espejo LED Ba├▒o',
-  'Set de Toallas Premium', 'Reloj de Pared Moderno', 'Maceta Decorativa Cer├ímica',
-  'Bal├│n de F├║tbol Pro', 'Banda de Resistencia Set', 'Tapete de Yoga Premium',
-  'Guantes de Entrenamiento', 'Botella Deportiva 1L', 'Bicicleta Est├ítica Plegable',
-  'Cuerda para Saltar Pro', 'Rodillera Deportiva', 'Prote├¡na Whey 2kg',
+  'Cafetera Express Automática', 'Aspiradora Robot Smart', 'Espejo LED Baño',
+  'Set de Toallas Premium', 'Reloj de Pared Moderno', 'Maceta Decorativa Cerámica',
+  'Balón de Fútbol Pro', 'Banda de Resistencia Set', 'Tapete de Yoga Premium',
+  'Guantes de Entrenamiento', 'Botella Deportiva 1L', 'Bicicleta Estática Plegable',
+  'Cuerda para Saltar Pro', 'Rodillera Deportiva', 'Proteína Whey 2kg',
   'Mancuerna Ajustable 20kg', 'Funda iPhone Premium', 'Billetera RFID Cuero',
   'Lentes de Sol Polarizados', 'Pulsera Inteligente', 'Anillo Smart NFC',
-  'Cintur├│n de Cuero Premium', 'Portafolios Ejecutivo', 'Power Bank 20000mAh',
+  'Cinturón de Cuero Premium', 'Portafolios Ejecutivo', 'Power Bank 20000mAh',
   'Cable USB-C Trenzado 2m', 'Soporte Laptop Ajustable',
 ];
 
 export const products: Product[] = productNames.map((name, i) => ({
   id: `prod-${String(i + 1).padStart(3, '0')}`,
   name,
-  description: `Producto de alta calidad: ${name}. Dise├▒ado para satisfacer las necesidades del consumidor moderno.`,
+  description: `Producto de alta calidad: ${name}. Diseñado para satisfacer las necesidades del consumidor moderno.`,
   price: Math.round((Math.random() * 4500 + 199) * 100) / 100,
   comparePrice: Math.random() > 0.5 ? Math.round((Math.random() * 5000 + 500) * 100) / 100 : undefined,
   category: categories[i % categories.length],
@@ -68,11 +68,11 @@ export const products: Product[] = productNames.map((name, i) => ({
 
 
 const customerNames = [
-  'Mar├¡a Garc├¡a L├│pez', 'Carlos Hern├índez', 'Ana Mart├¡nez Ruiz',
-  'Jorge D├¡az P├®rez', 'Sof├¡a Ram├¡rez', 'Diego L├│pez S├ínchez',
-  'Valentina Torres', 'Andr├®s Morales', 'Camila Reyes',
+  'María García López', 'Carlos Hernández', 'Ana Martínez Ruiz',
+  'Jorge Díaz Pérez', 'Sofía Ramírez', 'Diego López Sánchez',
+  'Valentina Torres', 'Andrés Morales', 'Camila Reyes',
   'Fernando Cruz', 'Isabella Flores', 'Roberto Mendoza',
-  'Luc├¡a Castillo', 'Alejandro Vargas', 'Gabriela Romero',
+  'Lucía Castillo', 'Alejandro Vargas', 'Gabriela Romero',
 ];
 
 const statuses: Array<'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled'> = [
@@ -99,8 +99,8 @@ export const orders: Order[] = Array.from({ length: 30 }, (_, i) => {
     total: items.reduce((s, it) => s + it.price * it.quantity, 0),
     status: statuses[i % statuses.length],
     date: new Date(2026, 0, Math.floor(Math.random() * 78) + 1).toISOString(),
-    shippingAddress: `Calle ${i + 1} #${Math.floor(Math.random() * 999)}, Col. Centro, Tuxtla Guti├®rrez, Chiapas`,
-    paymentMethod: i % 3 === 0 ? 'Tarjeta de cr├®dito' : i % 3 === 1 ? 'PayPal' : 'Transferencia',
+    shippingAddress: `Calle ${i + 1} #${Math.floor(Math.random() * 999)}, Col. Centro, Tuxtla Gutiérrez, Chiapas`,
+    paymentMethod: i % 3 === 0 ? 'Tarjeta de crédito' : i % 3 === 1 ? 'PayPal' : 'Transferencia',
   };
 });
 
@@ -145,26 +145,26 @@ export const projectPhases: ProjectPhase[] = [
   {
     name: 'Inicio',
     activities: [
-      { name: 'Reuni├│n de arranque', cost: 900, hours: 4, responsible: 'Project Manager' },
-      { name: 'Asignaci├│n de roles', cost: 250, hours: 1, responsible: 'Project Manager' },
+      { name: 'Reunión de arranque', cost: 900, hours: 4, responsible: 'Project Manager' },
+      { name: 'Asignación de roles', cost: 250, hours: 1, responsible: 'Project Manager' },
     ],
   },
   {
-    name: 'An├ílisis',
+    name: 'Análisis',
     activities: [
-      { name: 'Definici├│n de requerimientos', cost: 3000, hours: 12, responsible: 'Project Manager' },
+      { name: 'Definición de requerimientos', cost: 3000, hours: 12, responsible: 'Project Manager' },
     ],
   },
   {
-    name: 'Dise├▒o',
+    name: 'Diseño',
     activities: [
-      { name: 'Dise├▒o de Base de Datos', cost: 2600, hours: 13, responsible: 'Back End Developer' },
+      { name: 'Diseño de Base de Datos', cost: 2600, hours: 13, responsible: 'Back End Developer' },
       { name: 'Maquetado UI/UX', cost: 2400, hours: 12, responsible: 'Front End Developer' },
       { name: 'Arquitectura del sistema', cost: 2000, hours: 10, responsible: 'DevOps' },
     ],
   },
   {
-    name: 'Construcci├│n',
+    name: 'Construcción',
     activities: [
       { name: 'Desarrollo Backend', cost: 15000, hours: 60, responsible: 'Back End Developer' },
       { name: 'Desarrollo Frontend', cost: 8000, hours: 40, responsible: 'Front End Developer' },
@@ -179,15 +179,15 @@ export const projectPhases: ProjectPhase[] = [
   {
     name: 'Despliegue',
     activities: [
-      { name: 'Configuraci├│n de Servidores', cost: 1200, hours: 6, responsible: 'DevOps' },
+      { name: 'Configuración de Servidores', cost: 1200, hours: 6, responsible: 'DevOps' },
       { name: 'Certificado SSL y dominio', cost: 1200, hours: 6, responsible: 'DevOps' },
     ],
   },
   {
     name: 'Cierre',
     activities: [
-      { name: 'Documentaci├│n', cost: 2000, hours: 10, responsible: 'Front End Developer' },
-      { name: 'Direcci├│n de proyecto', cost: 900, hours: 4, responsible: 'Project Manager' },
+      { name: 'Documentación', cost: 2000, hours: 10, responsible: 'Front End Developer' },
+      { name: 'Dirección de proyecto', cost: 900, hours: 4, responsible: 'Project Manager' },
     ],
   },
 ];
@@ -219,14 +219,14 @@ export const weeklyRevenue: WeeklyRevenue[] = [
 
 export const pricingPlans: PricingPlan[] = [
   {
-    name: 'B├ísico',
+    name: 'Básico',
     slug: 'basico',
     price: 299,
     period: '/mes',
     highlighted: false,
     features: [
       'Hasta 100 productos',
-      'Panel de anal├¡tica b├ísico',
+      'Panel de analítica básico',
       'Soporte por email',
       '1 usuario administrador',
       'Pasarela de pagos (2.9% + $5)',
@@ -239,7 +239,7 @@ export const pricingPlans: PricingPlan[] = [
     price: 799,
     period: '/mes',
     highlighted: true,
-    badge: 'M├ís popular',
+    badge: 'Más popular',
     features: [
       'Productos ilimitados',
       'Dashboard avanzado con IA',
@@ -271,19 +271,19 @@ export const pricingPlans: PricingPlan[] = [
   },
 ];
 
-// ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
+// ─────────────────────────────────────────────────────────
 // COMPARATIVA VS COMPETIDORES
-// ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
+// ─────────────────────────────────────────────────────────
 
 export const competitors: Competitor[] = [
   {
     name: 'Shopify',
     monthlyFee: 'US$39 - $399',
-    commission: '2.9% + 30┬ó',
+    commission: '2.9% + 30¢',
     customDomain: true,
     analytics: true,
     multiPayment: true,
-    support: '24/7 (ingl├®s)',
+    support: '24/7 (inglés)',
   },
   {
     name: 'Amazon Seller',
@@ -319,14 +319,14 @@ export const competitors: Competitor[] = [
     customDomain: true,
     analytics: true,
     multiPayment: true,
-    support: '24/7 Espa├▒ol',
+    support: '24/7 Español',
     highlighted: true,
   },
 ];
 
-// ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
+// ─────────────────────────────────────────────────────────
 // COSTOS POR ROL (para donut chart)
-// ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
+// ─────────────────────────────────────────────────────────
 
 export const costByRole: CostBreakdown[] = [
   { role: 'Project Manager', amount: 5050, color: '#6366F1' },
@@ -335,9 +335,9 @@ export const costByRole: CostBreakdown[] = [
   { role: 'DevOps', amount: 7400, color: '#10B981' },
 ];
 
-// ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
+// ─────────────────────────────────────────────────────────
 // ACTIVIDADES POR FASE (para bar chart)
-// ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
+// ─────────────────────────────────────────────────────────
 
 export const phaseActivityData = projectPhases.map((phase) => ({
   phase: phase.name,
@@ -345,47 +345,47 @@ export const phaseActivityData = projectPhases.map((phase) => ({
   cost: phase.activities.reduce((s, a) => s + (a.cost ?? 0), 0),
 }));
 
-// ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
+// ─────────────────────────────────────────────────────────
 // ACTIVIDADES RECIENTES
-// ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
+// ─────────────────────────────────────────────────────────
 
 export const recentActivities = [
-  { id: 1, action: 'Nuevo pedido', description: 'ORD-01025 ÔÇö Mar├¡a Garc├¡a L├│pez', time: 'Hace 5 min', type: 'order' as const },
-  { id: 2, action: 'Producto actualizado', description: 'Aud├¡fonos Bluetooth Pro ÔÇö Stock: 45', time: 'Hace 12 min', type: 'product' as const },
-  { id: 3, action: 'Pago recibido', description: '$2,450.00 MXN ÔÇö PayPal', time: 'Hace 30 min', type: 'payment' as const },
+  { id: 1, action: 'Nuevo pedido', description: 'ORD-01025 — María García López', time: 'Hace 5 min', type: 'order' as const },
+  { id: 2, action: 'Producto actualizado', description: 'Audífonos Bluetooth Pro — Stock: 45', time: 'Hace 12 min', type: 'product' as const },
+  { id: 3, action: 'Pago recibido', description: '$2,450.00 MXN — PayPal', time: 'Hace 30 min', type: 'payment' as const },
   { id: 4, action: 'Cliente registrado', description: 'carlos.hdz@mail.com', time: 'Hace 1 hr', type: 'user' as const },
-  { id: 5, action: 'Env├¡o confirmado', description: 'ORD-01022 ÔÇö DHL Express', time: 'Hace 2 hr', type: 'shipping' as const },
-  { id: 6, action: 'Rese├▒a recibida', description: 'Smartwatch X1 ÔÇö ÔÿàÔÿàÔÿàÔÿàÔÿà', time: 'Hace 3 hr', type: 'review' as const },
-  { id: 7, action: 'Producto agotado', description: 'Monitor Curvo 27" ÔÇö Stock: 0', time: 'Hace 4 hr', type: 'product' as const },
-  { id: 8, action: 'Nuevo pedido', description: 'ORD-01024 ÔÇö Jorge D├¡az P├®rez', time: 'Hace 5 hr', type: 'order' as const },
-  { id: 9, action: 'Devoluci├│n solicitada', description: 'ORD-01018 ÔÇö Cable USB-C', time: 'Hace 6 hr', type: 'return' as const },
-  { id: 10, action: 'Cup├│n creado', description: 'PRIMAVERA2026 ÔÇö 15% desc.', time: 'Hace 8 hr', type: 'promo' as const },
+  { id: 5, action: 'Envío confirmado', description: 'ORD-01022 — DHL Express', time: 'Hace 2 hr', type: 'shipping' as const },
+  { id: 6, action: 'Reseña recibida', description: 'Smartwatch X1 — ⭐⭐⭐⭐⭐', time: 'Hace 3 hr', type: 'review' as const },
+  { id: 7, action: 'Producto agotado', description: 'Monitor Curvo 27" — Stock: 0', time: 'Hace 4 hr', type: 'product' as const },
+  { id: 8, action: 'Nuevo pedido', description: 'ORD-01024 — Jorge Díaz Pérez', time: 'Hace 5 hr', type: 'order' as const },
+  { id: 9, action: 'Devolución solicitada', description: 'ORD-01018 — Cable USB-C', time: 'Hace 6 hr', type: 'return' as const },
+  { id: 10, action: 'Cupón creado', description: 'PRIMAVERA2026 — 15% desc.', time: 'Hace 8 hr', type: 'promo' as const },
 ];
 
-// ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
+// ─────────────────────────────────────────────────────────
 // TIMELINE DEL PROYECTO (S1-S8)
-// ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
+// ─────────────────────────────────────────────────────────
 
 export const projectTimeline = [
-  { week: 'S1', title: 'Inicio del Proyecto', description: 'Reuni├│n de arranque, asignaci├│n de roles y definici├│n del alcance', status: 'completed' as const },
-  { week: 'S2', title: 'An├ílisis y Requerimientos', description: 'Levantamiento de requerimientos funcionales y no funcionales', status: 'completed' as const },
-  { week: 'S3', title: 'Dise├▒o del Sistema', description: 'Dise├▒o de BD, maquetado UI/UX y arquitectura del sistema', status: 'completed' as const },
-  { week: 'S4', title: 'Construcci├│n ÔÇö Backend', description: 'Desarrollo de APIs, modelos de datos y l├│gica de negocio', status: 'completed' as const },
-  { week: 'S5', title: 'Construcci├│n ÔÇö Frontend', description: 'Desarrollo de interfaz de usuario y componentes React', status: 'completed' as const },
-  { week: 'S6', title: 'Pruebas e Integraci├│n', description: 'QA, testing unitario e integraci├│n frontend-backend', status: 'current' as const },
-  { week: 'S7', title: 'Despliegue', description: 'Configuraci├│n de servidores, SSL y puesta en producci├│n', status: 'upcoming' as const },
-  { week: 'S8', title: 'Cierre y Documentaci├│n', description: 'Documentaci├│n t├®cnica, entrega final y cierre de proyecto', status: 'upcoming' as const },
+  { week: 'S1', title: 'Inicio del Proyecto', description: 'Reunión de arranque, asignación de roles y definición del alcance', status: 'completed' as const },
+  { week: 'S2', title: 'Análisis y Requerimientos', description: 'Levantamiento de requerimientos funcionales y no funcionales', status: 'completed' as const },
+  { week: 'S3', title: 'Diseño del Sistema', description: 'Diseño de BD, maquetado UI/UX y arquitectura del sistema', status: 'completed' as const },
+  { week: 'S4', title: 'Construcción — Backend', description: 'Desarrollo de APIs, modelos de datos y lógica de negocio', status: 'completed' as const },
+  { week: 'S5', title: 'Construcción — Frontend', description: 'Desarrollo de interfaz de usuario y componentes React', status: 'completed' as const },
+  { week: 'S6', title: 'Pruebas e Integración', description: 'QA, testing unitario e integración frontend-backend', status: 'current' as const },
+  { week: 'S7', title: 'Despliegue', description: 'Configuración de servidores, SSL y puesta en producción', status: 'upcoming' as const },
+  { week: 'S8', title: 'Cierre y Documentación', description: 'Documentación técnica, entrega final y cierre de proyecto', status: 'upcoming' as const },
 ];
 
-// ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
+// ─────────────────────────────────────────────────────────
 // DETALLES POR PLAN (Cliente)
-// ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
+// ─────────────────────────────────────────────────────────
 
 export const planDetails: Record<string, PlanDetail> = {
   basico: {
     id: 'plan-basico',
     slug: 'basico',
-    name: 'B├ísico',
+    name: 'Básico',
     tagline: 'Ideal para empezar tu tienda online sin complicaciones',
     price: 299,
     period: '/mes',
@@ -393,11 +393,11 @@ export const planDetails: Record<string, PlanDetail> = {
     accentColor: '#6366F1',
     featureGroups: [
       {
-        category: 'Anal├¡tica',
+        category: 'Analítica',
         icon: 'BarChart3',
         items: [
-          { name: 'Panel de m├®tricas', description: 'Visualiza ventas, visitas y clientes en un panel sencillo', included: true },
-          { name: 'Reportes mensuales', description: 'Recibe un resumen mensual autom├ítico por correo', included: true },
+          { name: 'Panel de métricas', description: 'Visualiza ventas, visitas y clientes en un panel sencillo', included: true },
+          { name: 'Reportes mensuales', description: 'Recibe un resumen mensual automático por correo', included: true },
           { name: 'Dashboard con IA', description: 'Predicciones y recomendaciones inteligentes', included: false },
           { name: 'Reportes en tiempo real', description: 'Datos actualizados al instante', included: false },
         ],
@@ -406,10 +406,10 @@ export const planDetails: Record<string, PlanDetail> = {
         category: 'Pagos',
         icon: 'CreditCard',
         items: [
-          { name: 'Pasarela integrada', description: 'Acepta tarjetas de cr├®dito y d├®bito', included: true },
-          { name: 'PayPal y SPEI', description: 'M├®todos de pago adicionales', included: true },
+          { name: 'Pasarela integrada', description: 'Acepta tarjetas de crédito y débito', included: true },
+          { name: 'PayPal y SPEI', description: 'Métodos de pago adicionales', included: true },
           { name: 'Multi-moneda', description: 'Vende en diferentes divisas', included: false },
-          { name: 'Comisi├│n reducida', description: 'Tarifa preferencial por transacci├│n', included: false },
+          { name: 'Comisión reducida', description: 'Tarifa preferencial por transacción', included: false },
         ],
       },
       {
@@ -417,8 +417,8 @@ export const planDetails: Record<string, PlanDetail> = {
         icon: 'Headphones',
         items: [
           { name: 'Soporte por email', description: 'Respuesta en menos de 24 horas', included: true },
-          { name: 'Base de conocimiento', description: 'Art├¡culos y tutoriales de ayuda', included: true },
-          { name: 'Soporte 24/7', description: 'Atenci├│n prioritaria cualquier d├¡a, cualquier hora', included: false },
+          { name: 'Base de conocimiento', description: 'Artículos y tutoriales de ayuda', included: true },
+          { name: 'Soporte 24/7', description: 'Atención prioritaria cualquier día, cualquier hora', included: false },
           { name: 'Account manager', description: 'Un asesor dedicado a tu cuenta', included: false },
         ],
       },
@@ -426,7 +426,7 @@ export const planDetails: Record<string, PlanDetail> = {
         category: 'Integraciones',
         icon: 'Puzzle',
         items: [
-          { name: 'Webhooks b├ísicos', description: 'Notificaciones autom├íticas de eventos', included: true },
+          { name: 'Webhooks básicos', description: 'Notificaciones automáticas de eventos', included: true },
           { name: 'API REST', description: 'Integra con tus sistemas existentes', included: false },
           { name: 'API privada', description: 'Endpoints exclusivos y personalizados', included: false },
           { name: 'White-label', description: 'Tu marca, tu dominio, sin rastro de E-Market', included: false },
@@ -442,13 +442,13 @@ export const planDetails: Record<string, PlanDetail> = {
     tools: [
       { name: 'Editor de productos', description: 'Crea y edita hasta 100 productos con foto y descripciones', icon: 'Package' },
       { name: 'Gestor de pedidos', description: 'Recibe, procesa y da seguimiento a los pedidos', icon: 'ShoppingCart' },
-      { name: 'Panel de m├®tricas', description: 'Visualiza tus ventas y visitas del mes', icon: 'BarChart3' },
+      { name: 'Panel de métricas', description: 'Visualiza tus ventas y visitas del mes', icon: 'BarChart3' },
       { name: 'Notificaciones email', description: 'Alertas de nuevos pedidos y stock bajo', icon: 'Mail' },
     ],
     simulatedKPIs: [
       { label: 'Ingresos del mes', value: 28500, prefix: '$', trend: 5.2 },
       { label: 'Clientes activos', value: 85, trend: 3.1 },
-      { label: '├ôrdenes del mes', value: 42, trend: 7.8 },
+      { label: 'Órdenes del mes', value: 42, trend: 7.8 },
       { label: 'Ticket promedio', value: 678, prefix: '$', trend: 2.4 },
     ],
     simulatedRevenue: [
@@ -470,15 +470,15 @@ export const planDetails: Record<string, PlanDetail> = {
     period: '/mes',
     gradient: ['#8B5CF6', '#06B6D4'],
     accentColor: '#8B5CF6',
-    badge: 'M├ís popular',
+    badge: 'Más popular',
     highlighted: true,
     featureGroups: [
       {
-        category: 'Anal├¡tica',
+        category: 'Analítica',
         icon: 'BarChart3',
         items: [
-          { name: 'Panel de m├®tricas', description: 'Visualiza ventas, visitas y clientes en un panel avanzado', included: true },
-          { name: 'Reportes mensuales', description: 'Recibe res├║menes autom├íticos detallados', included: true },
+          { name: 'Panel de métricas', description: 'Visualiza ventas, visitas y clientes en un panel avanzado', included: true },
+          { name: 'Reportes mensuales', description: 'Recibe resúmenes automáticos detallados', included: true },
           { name: 'Dashboard con IA', description: 'Predicciones de ventas y recomendaciones inteligentes', included: true },
           { name: 'Reportes en tiempo real', description: 'Datos actualizados al instante con alertas', included: true },
         ],
@@ -487,10 +487,10 @@ export const planDetails: Record<string, PlanDetail> = {
         category: 'Pagos',
         icon: 'CreditCard',
         items: [
-          { name: 'Pasarela integrada', description: 'Acepta tarjetas de cr├®dito y d├®bito', included: true },
-          { name: 'PayPal y SPEI', description: 'M├®todos de pago adicionales', included: true },
-          { name: 'Multi-moneda', description: 'Vende en USD, EUR y m├ís divisas', included: true },
-          { name: 'Comisi├│n reducida', description: '1.9% + $3 por transacci├│n', included: true },
+          { name: 'Pasarela integrada', description: 'Acepta tarjetas de crédito y débito', included: true },
+          { name: 'PayPal y SPEI', description: 'Métodos de pago adicionales', included: true },
+          { name: 'Multi-moneda', description: 'Vende en USD, EUR y más divisas', included: true },
+          { name: 'Comisión reducida', description: '1.9% + $3 por transacción', included: true },
         ],
       },
       {
@@ -498,8 +498,8 @@ export const planDetails: Record<string, PlanDetail> = {
         icon: 'Headphones',
         items: [
           { name: 'Soporte por email', description: 'Respuesta en menos de 4 horas', included: true },
-          { name: 'Base de conocimiento', description: 'Art├¡culos, tutoriales y videos', included: true },
-          { name: 'Soporte 24/7', description: 'Chat en vivo y tel├®fono, cualquier d├¡a y hora', included: true },
+          { name: 'Base de conocimiento', description: 'Artículos, tutoriales y videos', included: true },
+          { name: 'Soporte 24/7', description: 'Chat en vivo y teléfono, cualquier día y hora', included: true },
           { name: 'Account manager', description: 'Un asesor dedicado a tu cuenta', included: false },
         ],
       },
@@ -508,7 +508,7 @@ export const planDetails: Record<string, PlanDetail> = {
         icon: 'Puzzle',
         items: [
           { name: 'Webhooks avanzados', description: 'Notificaciones configurables por evento', included: true },
-          { name: 'API REST', description: 'Documentaci├│n completa, 10,000 llamadas/mes', included: true },
+          { name: 'API REST', description: 'Documentación completa, 10,000 llamadas/mes', included: true },
           { name: 'API privada', description: 'Endpoints exclusivos y personalizados', included: false },
           { name: 'White-label', description: 'Tu marca, tu dominio, sin rastro de E-Market', included: false },
         ],
@@ -524,14 +524,14 @@ export const planDetails: Record<string, PlanDetail> = {
       { name: 'Editor de productos', description: 'Productos ilimitados con variantes, SKUs y SEO', icon: 'Package' },
       { name: 'Gestor de pedidos', description: 'Flujo completo con estados, tracking y devoluciones', icon: 'ShoppingCart' },
       { name: 'Dashboard con IA', description: 'Predicciones de demanda y sugerencias de precios', icon: 'Brain' },
-      { name: 'Integraciones API', description: 'Conecta con tu ERP, CRM o sistema de env├¡os', icon: 'Plug' },
+      { name: 'Integraciones API', description: 'Conecta con tu ERP, CRM o sistema de envíos', icon: 'Plug' },
       { name: 'Multi-moneda', description: 'Vende en la moneda que tus clientes prefieran', icon: 'Globe' },
-      { name: 'Reportes en tiempo real', description: 'M├®tricas actualizadas al segundo con alertas', icon: 'Activity' },
+      { name: 'Reportes en tiempo real', description: 'Métricas actualizadas al segundo con alertas', icon: 'Activity' },
     ],
     simulatedKPIs: [
       { label: 'Ingresos del mes', value: 189600, prefix: '$', trend: 12.5 },
       { label: 'Clientes activos', value: 1247, trend: 8.3 },
-      { label: '├ôrdenes del mes', value: 384, trend: 15.2 },
+      { label: 'Órdenes del mes', value: 384, trend: 15.2 },
       { label: 'Ticket promedio', value: 4726, prefix: '$', trend: 3.1 },
     ],
     simulatedRevenue: [
@@ -555,11 +555,11 @@ export const planDetails: Record<string, PlanDetail> = {
     accentColor: '#06B6D4',
     featureGroups: [
       {
-        category: 'Anal├¡tica',
+        category: 'Analítica',
         icon: 'BarChart3',
         items: [
-          { name: 'Panel de m├®tricas', description: 'Dashboard empresarial con vistas personalizables', included: true },
-          { name: 'Reportes mensuales', description: 'Reportes ejecutivos detallados y autom├íticos', included: true },
+          { name: 'Panel de métricas', description: 'Dashboard empresarial con vistas personalizables', included: true },
+          { name: 'Reportes mensuales', description: 'Reportes ejecutivos detallados y automáticos', included: true },
           { name: 'Dashboard con IA', description: 'Modelos predictivos avanzados y machine learning', included: true },
           { name: 'Reportes en tiempo real', description: 'Streaming de datos con dashboards en vivo', included: true },
         ],
@@ -568,10 +568,10 @@ export const planDetails: Record<string, PlanDetail> = {
         category: 'Pagos',
         icon: 'CreditCard',
         items: [
-          { name: 'Pasarela integrada', description: 'Todas las tarjetas y m├®todos locales', included: true },
-          { name: 'PayPal y SPEI', description: 'Todos los m├®todos de pago disponibles', included: true },
+          { name: 'Pasarela integrada', description: 'Todas las tarjetas y métodos locales', included: true },
+          { name: 'PayPal y SPEI', description: 'Todos los métodos de pago disponibles', included: true },
           { name: 'Multi-moneda', description: 'Soporte completo para comercio internacional', included: true },
-          { name: 'Comisi├│n m├¡nima', description: '0.9% + $2 ÔÇö la tarifa m├ís baja del mercado', included: true },
+          { name: 'Comisión mínima', description: '0.9% + $2 — la tarifa más baja del mercado', included: true },
         ],
       },
       {
@@ -579,8 +579,8 @@ export const planDetails: Record<string, PlanDetail> = {
         icon: 'Headphones',
         items: [
           { name: 'Soporte por email', description: 'Respuesta garantizada en 1 hora', included: true },
-          { name: 'Base de conocimiento', description: 'Documentaci├│n, videos y workshops privados', included: true },
-          { name: 'Soporte 24/7', description: 'L├¡nea directa con ingenieros senior', included: true },
+          { name: 'Base de conocimiento', description: 'Documentación, videos y workshops privados', included: true },
+          { name: 'Soporte 24/7', description: 'Línea directa con ingenieros senior', included: true },
           { name: 'Account manager', description: 'Ejecutivo de cuenta dedicado y reuniones semanales', included: true },
         ],
       },
@@ -589,8 +589,8 @@ export const planDetails: Record<string, PlanDetail> = {
         icon: 'Puzzle',
         items: [
           { name: 'Webhooks enterprise', description: 'Cola de mensajes garantizada y reintentos', included: true },
-          { name: 'API REST', description: 'Sin l├¡mite de llamadas, SLA 99.9%', included: true },
-          { name: 'API privada', description: 'Endpoints personalizados para tu operaci├│n', included: true },
+          { name: 'API REST', description: 'Sin límite de llamadas, SLA 99.9%', included: true },
+          { name: 'API privada', description: 'Endpoints personalizados para tu operación', included: true },
           { name: 'White-label', description: 'Marca completamente personalizada en toda la plataforma', included: true },
         ],
       },
@@ -602,19 +602,19 @@ export const planDetails: Record<string, PlanDetail> = {
       apiCalls: 'unlimited',
     },
     tools: [
-      { name: 'Editor de productos', description: 'Sin l├¡mites: variantes, bulk import, SEO avanzado', icon: 'Package' },
-      { name: 'Gestor de pedidos', description: 'Multi-almac├®n, automatizaci├│n de fulfillment', icon: 'ShoppingCart' },
-      { name: 'IA Empresarial', description: 'Modelos predictivos, segmentaci├│n y optimizaci├│n', icon: 'Brain' },
-      { name: 'API privada', description: 'Endpoints personalizados y documentaci├│n dedicada', icon: 'Code' },
+      { name: 'Editor de productos', description: 'Sin límites: variantes, bulk import, SEO avanzado', icon: 'Package' },
+      { name: 'Gestor de pedidos', description: 'Multi-almacén, automatización de fulfillment', icon: 'ShoppingCart' },
+      { name: 'IA Empresarial', description: 'Modelos predictivos, segmentación y optimización', icon: 'Brain' },
+      { name: 'API privada', description: 'Endpoints personalizados y documentación dedicada', icon: 'Code' },
       { name: 'White-label', description: 'Tu marca en toda la experiencia, sin rastro de E-Market', icon: 'Palette' },
       { name: 'Infraestructura dedicada', description: 'Servidores aislados con SLA 99.9% uptime', icon: 'Server' },
-      { name: 'Onboarding personalizado', description: 'Migraci├│n guiada y configuraci├│n a la medida', icon: 'UserCheck' },
-      { name: 'Multi-moneda global', description: 'Comercio internacional con conversi├│n autom├ítica', icon: 'Globe' },
+      { name: 'Onboarding personalizado', description: 'Migración guiada y configuración a la medida', icon: 'UserCheck' },
+      { name: 'Multi-moneda global', description: 'Comercio internacional con conversión automática', icon: 'Globe' },
     ],
     simulatedKPIs: [
       { label: 'Ingresos del mes', value: 1250000, prefix: '$', trend: 18.7 },
       { label: 'Clientes activos', value: 12480, trend: 14.2 },
-      { label: '├ôrdenes del mes', value: 4850, trend: 22.1 },
+      { label: 'Órdenes del mes', value: 4850, trend: 22.1 },
       { label: 'Ticket promedio', value: 8240, prefix: '$', trend: 6.5 },
     ],
     simulatedRevenue: [
@@ -628,34 +628,34 @@ export const planDetails: Record<string, PlanDetail> = {
   },
 };
 
-// ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
+// ─────────────────────────────────────────────────────────
 // TESTIMONIOS
-// ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
+// ─────────────────────────────────────────────────────────
 
 export const testimonials: Testimonial[] = [
   {
     id: 'test-1',
-    name: 'Laura M├®ndez',
+    name: 'Laura Méndez',
     role: 'Fundadora',
-    company: 'Artesan├¡as Chiapas',
+    company: 'Artesanías Chiapas',
     avatar: '',
-    quote: 'Con el plan B├ísico pude digitalizar mi tienda de artesan├¡as en menos de una semana. Los reportes mensuales me ayudan a entender qu├® productos se venden m├ís.',
+    quote: 'Con el plan Básico pude digitalizar mi tienda de artesanías en menos de una semana. Los reportes mensuales me ayudan a entender qué productos se venden más.',
     plan: 'basico',
     rating: 5,
   },
   {
     id: 'test-2',
-    name: 'Roberto Jim├®nez',
+    name: 'Roberto Jiménez',
     role: 'Gerente General',
     company: 'TechShop MX',
     avatar: '',
-    quote: 'Empezamos con el B├ísico y en 3 meses migramos al Pro. La diferencia en anal├¡tica es impresionante, las predicciones de IA nos ayudaron a reducir stock muerto un 40%.',
+    quote: 'Empezamos con el Básico y en 3 meses migramos al Pro. La diferencia en analítica es impresionante, las predicciones de IA nos ayudaron a reducir stock muerto un 40%.',
     plan: 'basico',
     rating: 4,
   },
   {
     id: 'test-3',
-    name: 'Patricia Rodr├¡guez',
+    name: 'Patricia Rodríguez',
     role: 'Directora de E-commerce',
     company: 'ModaFit Studio',
     avatar: '',
@@ -669,13 +669,13 @@ export const testimonials: Testimonial[] = [
     role: 'CTO',
     company: 'ElectroMart',
     avatar: '',
-    quote: 'Las integraciones API del plan Pro nos permitieron conectar nuestro ERP y sistema de env├¡os. Ahora todo est├í automatizado y ahorramos 20 horas semanales.',
+    quote: 'Las integraciones API del plan Pro nos permitieron conectar nuestro ERP y sistema de envíos. Ahora todo está automatizado y ahorramos 20 horas semanales.',
     plan: 'pro',
     rating: 5,
   },
   {
     id: 'test-5',
-    name: 'Carmen V├ízquez',
+    name: 'Carmen Vázquez',
     role: 'VP de Operaciones',
     company: 'GrupoRetail Nacional',
     avatar: '',
@@ -685,7 +685,7 @@ export const testimonials: Testimonial[] = [
   },
   {
     id: 'test-6',
-    name: 'Fernando Casta├▒eda',
+    name: 'Fernando Castañeda',
     role: 'CEO',
     company: 'MegaStore Online',
     avatar: '',
@@ -695,76 +695,76 @@ export const testimonials: Testimonial[] = [
   },
 ];
 
-// ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
+// ─────────────────────────────────────────────────────────
 // PREGUNTAS FRECUENTES
-// ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
+// ─────────────────────────────────────────────────────────
 
 export const faqItems: FAQItem[] = [
   {
     id: 'faq-1',
-    question: '┬┐Puedo cambiar de plan en cualquier momento?',
-    answer: 'S├¡, puedes subir o bajar de plan cuando quieras. Si subes de plan, solo pagar├ís la diferencia proporcional. Si bajas, el cambio se aplica en tu pr├│ximo ciclo de facturaci├│n.',
+    question: '¿Puedo cambiar de plan en cualquier momento?',
+    answer: 'Sí, puedes subir o bajar de plan cuando quieras. Si subes de plan, solo pagarás la diferencia proporcional. Si bajas, el cambio se aplica en tu próximo ciclo de facturación.',
   },
   {
     id: 'faq-2',
-    question: '┬┐Hay un periodo de prueba gratuito?',
-    answer: 'Todos los planes incluyen 14 d├¡as de prueba gratuita sin necesidad de tarjeta de cr├®dito. Al finalizar, puedes elegir el plan que mejor se adapte a tu negocio.',
+    question: '¿Hay un periodo de prueba gratuito?',
+    answer: 'Todos los planes incluyen 14 días de prueba gratuita sin necesidad de tarjeta de crédito. Al finalizar, puedes elegir el plan que mejor se adapte a tu negocio.',
   },
   {
     id: 'faq-3',
-    question: '┬┐C├│mo funciona la pasarela de pagos?',
-    answer: 'E-MARKET PRO integra Stripe, PayPal y SPEI. Tus clientes pueden pagar con tarjeta de cr├®dito/d├®bito, transferencia bancaria o PayPal. Los fondos se depositan en tu cuenta en 2-3 d├¡as h├íbiles.',
+    question: '¿Cómo funciona la pasarela de pagos?',
+    answer: 'E-MARKET PRO integra Stripe, PayPal y SPEI. Tus clientes pueden pagar con tarjeta de crédito/débito, transferencia bancaria o PayPal. Los fondos se depositan en tu cuenta en 2-3 días hábiles.',
   },
   {
     id: 'faq-4',
-    question: '┬┐Mis datos est├ín seguros?',
-    answer: 'Utilizamos encriptaci├│n AES-256, certificados SSL/TLS, y cumplimos con PCI DSS nivel 1. Tus datos y los de tus clientes est├ín protegidos con los m├ís altos est├índares de seguridad.',
+    question: '¿Mis datos están seguros?',
+    answer: 'Utilizamos encriptación AES-256, certificados SSL/TLS, y cumplimos con PCI DSS nivel 1. Tus datos y los de tus clientes están protegidos con los más altos estándares de seguridad.',
   },
   {
     id: 'faq-5',
-    question: '┬┐Puedo migrar mis datos desde otra plataforma?',
-    answer: 'S├¡, ofrecemos herramientas de importaci├│n para CSV/Excel y migraciones guiadas desde Shopify, WooCommerce y Tiendanube. En el plan Enterprise, un equipo dedicado se encarga de la migraci├│n completa.',
+    question: '¿Puedo migrar mis datos desde otra plataforma?',
+    answer: 'Sí, ofrecemos herramientas de importación para CSV/Excel y migraciones guiadas desde Shopify, WooCommerce y Tiendanube. En el plan Enterprise, un equipo dedicado se encarga de la migración completa.',
   },
   {
     id: 'faq-6',
-    question: '┬┐Hay permanencia m├¡nima o penalizaci├│n por cancelar?',
-    answer: 'No hay permanencia m├¡nima ni penalizaciones. Puedes cancelar en cualquier momento y seguir├ís teniendo acceso hasta el final de tu periodo de facturaci├│n actual.',
+    question: '¿Hay permanencia mínima o penalización por cancelar?',
+    answer: 'No hay permanencia mínima ni penalizaciones. Puedes cancelar en cualquier momento y seguirás teniendo acceso hasta el final de tu periodo de facturación actual.',
   },
   {
     id: 'faq-7',
-    question: '┬┐Qu├® m├®todos de pago aceptan para la suscripci├│n?',
-    answer: 'Aceptamos tarjetas de cr├®dito/d├®bito (Visa, Mastercard, AMEX), PayPal y transferencia bancaria (SPEI). La facturaci├│n es mensual o anual con 20% de descuento.',
+    question: '¿Qué métodos de pago aceptan para la suscripción?',
+    answer: 'Aceptamos tarjetas de crédito/débito (Visa, Mastercard, AMEX), PayPal y transferencia bancaria (SPEI). La facturación es mensual o anual con 20% de descuento.',
   },
   {
     id: 'faq-8',
-    question: '┬┐Incluyen dominio personalizado?',
-    answer: 'S├¡, todos los planes incluyen la posibilidad de conectar tu propio dominio. Nosotros nos encargamos de la configuraci├│n del certificado SSL gratuito.',
+    question: '¿Incluyen dominio personalizado?',
+    answer: 'Sí, todos los planes incluyen la posibilidad de conectar tu propio dominio. Nosotros nos encargamos de la configuración del certificado SSL gratuito.',
   },
 ];
 
-// ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
+// ─────────────────────────────────────────────────────────
 // CHAT SOPORTE (respuestas predefinidas)
-// ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
+// ─────────────────────────────────────────────────────────
 
 export const chatQuickActions: ChatQuickAction[] = [
   {
-    label: '┬┐Qu├® plan me conviene?',
-    response: '┬íExcelente pregunta! Depende del tama├▒o de tu negocio:\n\nÔÇó **B├ísico** ($299/mes): Ideal si tienes menos de 100 productos y est├ís empezando.\nÔÇó **Pro** ($799/mes): Perfecto si necesitas anal├¡tica avanzada, IA y API.\nÔÇó **Enterprise** ($1,499/mes): Para operaciones a gran escala con infraestructura dedicada.\n\n┬┐Te gustar├¡a m├ís detalles de alg├║n plan?',
+    label: '¿Qué plan me conviene?',
+    response: '¡Excelente pregunta! Depende del tamaño de tu negocio:\n\n• **Básico** ($299/mes): Ideal si tienes menos de 100 productos y estás empezando.\n• **Pro** ($799/mes): Perfecto si necesitas analítica avanzada, IA y API.\n• **Enterprise** ($1,499/mes): Para operaciones a gran escala con infraestructura dedicada.\n\n¿Te gustaría más detalles de algún plan?',
   },
   {
-    label: '┬┐Tienen prueba gratis?',
-    response: '┬íS├¡! Todos los planes incluyen **14 d├¡as de prueba gratuita** sin necesidad de tarjeta de cr├®dito. Puedes explorar todas las funciones y decidir despu├®s. ­ƒÄë',
+    label: '¿Tienen prueba gratis?',
+    response: '¡Sí! Todos los planes incluyen **14 días de prueba gratuita** sin necesidad de tarjeta de crédito. Puedes explorar todas las funciones y decidir después. 🎉',
   },
   {
-    label: '┬┐C├│mo migro mis datos?',
-    response: 'Tenemos herramientas de importaci├│n para **CSV/Excel** y migraciones guiadas desde Shopify, WooCommerce y Tiendanube.\n\nEn el plan Enterprise, un equipo dedicado se encarga de todo el proceso de migraci├│n. ­ƒôª',
+    label: '¿Cómo migro mis datos?',
+    response: 'Tenemos herramientas de importación para **CSV/Excel** y migraciones guiadas desde Shopify, WooCommerce y Tiendanube.\n\nEn el plan Enterprise, un equipo dedicado se encarga de todo el proceso de migración. 📚',
   },
   {
-    label: '┬┐Puedo cancelar cuando quiera?',
-    response: '┬íPor supuesto! No hay permanencia m├¡nima ni penalizaciones. Puedes cancelar en cualquier momento y seguir├ís teniendo acceso hasta el final de tu periodo de facturaci├│n. Ô£à',
+    label: '¿Puedo cancelar cuando quiera?',
+    response: '¡Por supuesto! No hay permanencia mínima ni penalizaciones. Puedes cancelar en cualquier momento y seguirás teniendo acceso hasta el final de tu periodo de facturación. ✅',
   },
   {
     label: 'Necesito hablar con ventas',
-    response: 'Con gusto te conecto con nuestro equipo de ventas. Puedes escribirnos a **ventas@emarketpro.mx** o llamar al **800-123-4567** de lunes a viernes de 9am a 6pm. Tambi├®n puedes agendar una demo personalizada. ­ƒô×',
+    response: 'Con gusto te conecto con nuestro equipo de ventas. Puedes escribirnos a **ventas@emarketpro.mx** o llamar al **800-123-4567** de lunes a viernes de 9am a 6pm. También puedes agendar una demo personalizada. 📞',
   },
 ];

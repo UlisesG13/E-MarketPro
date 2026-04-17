@@ -1,40 +1,59 @@
-import { useCallback } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import { useAdminAuthStore } from '../store/adminAuthStore';
-import { useStoreStore } from '../store/storeStore';
 import { adminAuthService } from '../services/adminAuthService';
-import type { AdminLoginInput } from '../services/adminAuthService';
+import type { AdminLoginInput, AdminRegisterInput } from '../services/adminAuthService';
+import { ApiError } from '@/shared/services/apiClient';
 
 export function useAdminAuth() {
-  const { user, store, token, isAuthenticated, login, logout } = useAdminAuthStore();
-  const { setStore } = useStoreStore();
+  const navigate = useNavigate();
+  const { setAuth, logout: logoutStore, isAuthenticated, admin, store } = useAdminAuthStore();
 
-  const signIn = useCallback(
-    async (input: AdminLoginInput) => {
-      const response = await adminAuthService.login(input);
-      login(response.admin, response.store, response.token);
-      setStore(response.store);
-      return response;
+  const loginMutation = useMutation({
+    mutationFn: (data: AdminLoginInput) => adminAuthService.login(data),
+    onSuccess: (response) => {
+      setAuth(response.admin, response.store, response.access_token, response.refresh_token);
+      toast.success(`Bienvenido, ${response.admin.name}`);
+      navigate('/dashboard');
     },
-    [login, setStore]
-  );
+    onError: (error: unknown) => {
+      const detail = error instanceof ApiError ? error.detail : 'Error al iniciar sesión';
+      toast.error(detail);
+    },
+  });
 
-  const signOut = useCallback(async () => {
+  const registerMutation = useMutation({
+    mutationFn: (data: AdminRegisterInput) => adminAuthService.register(data),
+    onSuccess: (response) => {
+      setAuth(response.admin, response.store, response.access_token, response.refresh_token);
+      toast.success('Cuenta creada exitosamente');
+      navigate('/dashboard');
+    },
+    onError: (error: unknown) => {
+      const detail = error instanceof ApiError ? error.detail : 'Error al crear la cuenta';
+      toast.error(detail);
+    },
+  });
+
+  const logout = async () => {
     try {
       await adminAuthService.logout();
-    } catch {
-      // Ignore server error on logout - always clear local state
-    } finally {
-      logout();
-    }
-  }, [logout]);
+    } catch { /* always clear local state */ }
+    logoutStore();
+    navigate('/login');
+  };
 
   return {
-    user,
-    store,
-    token,
     isAuthenticated,
-    signIn,
-    signOut,
-    currentPlan: user?.plan ?? 'free',
+    admin,
+    store,
+    login: loginMutation.mutate,
+    register: registerMutation.mutate,
+    logout,
+    isLoggingIn: loginMutation.isPending,
+    isRegistering: registerMutation.isPending,
+    loginError: loginMutation.error,
+    registerError: registerMutation.error,
   };
 }

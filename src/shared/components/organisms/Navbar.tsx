@@ -10,7 +10,7 @@ const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { darkMode, toggleDarkMode, toggleSidebar } = useUIStore();
-  const user = useAdminAuthStore((state) => state.user);
+  const user = useAdminAuthStore((state) => state.admin);
   const logout = useAdminAuthStore((state) => state.logout);
   const [menuOpen, setMenuOpen] = useState(false);
 
